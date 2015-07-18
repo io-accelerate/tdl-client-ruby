@@ -1,4 +1,4 @@
-# require 'jmx'
+require 'jmx'
 
 class ActiveMQBrokerRule
 
