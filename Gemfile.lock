@@ -1,0 +1,34 @@
+PATH
+  remote: .
+  specs:
+    tdl-client-ruby (0.0.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ansi (1.5.0)
+    builder (3.2.2)
+    hashie (3.4.2)
+    minitest (4.3.2)
+    minitest-reporters (0.14.24)
+      ansi
+      builder
+      minitest (>= 2.12, < 5.0)
+      powerbar
+    powerbar (1.0.12)
+      ansi (~> 1.5.0)
+      hashie (>= 1.1.0)
+    rake (10.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.10)
+  minitest (~> 4.3.2)
+  minitest-reporters (~> 0.14.24)
+  rake (~> 10.0)
+  tdl-client-ruby!
+
+BUNDLED WITH
+   1.10.5
