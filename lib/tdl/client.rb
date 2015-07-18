@@ -1,9 +1,8 @@
 module TDL
 
   class Client
-    def self.hi(language = "english")
-      translator = Translator.new(language)
-      translator.hi
+    def go_live_with
+      # code here
     end
   end
 
