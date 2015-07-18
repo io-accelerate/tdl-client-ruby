@@ -12,3 +12,9 @@ desc 'Run the example'
 task :example do
   sh 'jruby -I lib examples/solve.rb'
 end
+
+
+desc 'Run the test playground'
+task :playground do
+  sh 'jruby -I lib ./test/utils/jmx/broker/playground.rb'
+end
