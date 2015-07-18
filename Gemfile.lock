@@ -8,18 +8,15 @@ GEM
   specs:
     ansi (1.5.0)
     builder (3.2.2)
-    hashie (3.4.2)
-    jmx (0.9)
-    minitest (4.3.2)
-    minitest-reporters (0.14.24)
+    jmx4r (0.1.4)
+    minitest (5.4.1)
+    minitest-reporters (1.0.19)
       ansi
       builder
-      minitest (>= 2.12, < 5.0)
-      powerbar
-    powerbar (1.0.12)
-      ansi (~> 1.5.0)
-      hashie (>= 1.1.0)
+      minitest (>= 5.0)
+      ruby-progressbar
     rake (10.4.2)
+    ruby-progressbar (1.7.5)
 
 PLATFORMS
   java
@@ -27,9 +24,9 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.10)
-  jmx (~> 0.9)
-  minitest (~> 4.3.2)
-  minitest-reporters (~> 0.14.24)
+  jmx4r (~> 0.1.4)
+  minitest (= 5.4.1)
+  minitest-reporters (~> 1.0.19)
   rake (~> 10.0)
   tdl-client-ruby!
 

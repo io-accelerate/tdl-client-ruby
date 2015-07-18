@@ -1,19 +1,21 @@
 # noinspection RubyResolve,RubyResolve
 require 'test_helper'
 
-class ClientTest < MiniTest::Unit::TestCase
+class ClientTest < Minitest::Test
   REQUESTS = [ 'X1, 0, 1', 'X2, 5, 6' ]
   EXPECTED_RESPONSES = 'x'
   CORRECT_SOLUTION = lambda { |x,y| x + y }
 
-  # Broker definition
+  # Broker JMX definition
   JMX_PORT = 20011
-  OPENWIRE_PORT = 21616
-  BROKER_URL = "tcp://localhost:#{OPENWIRE_PORT}"
   BROKER_NAME = 'TEST.BROKER'
-  USERNAME = 'test'
   @@broker = ActiveMQBrokerRule.new('localhost', JMX_PORT, BROKER_NAME)
   @@broker.connect
+
+  # Broker client definition
+  OPENWIRE_PORT = 21616
+  BROKER_URL = "tcp://localhost:#{OPENWIRE_PORT}"
+  USERNAME = 'test'
 
   def setup
     # Given we have a couple of requests waiting

@@ -1,4 +1,4 @@
-require 'jmx'
+
 
 class ActiveMQBrokerRule
 
@@ -9,13 +9,13 @@ class ActiveMQBrokerRule
   end
 
   def connect
-
+    @remote_jmx_broker = RemoteJmxBroker.connect(@hostname, @port, @broker_name)
   end
 
   #~~~~ Facade to broker
 
   def add_queue(queue_name)
-    RemoteJmxQueue.new
+    @remote_jmx_broker.add_queue(queue_name)
   end
 
 end
