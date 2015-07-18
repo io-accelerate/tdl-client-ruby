@@ -20,6 +20,7 @@
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, ruby-2.0.0-p481) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.10.5, ruby-2.0.0-p481) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hashie (v3.4.2, ruby-2.0.0-p481) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jmx (v0.9, ruby-2.0.0-p481) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v4.3.2, ruby-2.0.0-p481) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest-reporters (v0.14.24, ruby-2.0.0-p481) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="powerbar (v1.0.12, ruby-2.0.0-p481) [gem]" level="application" />
