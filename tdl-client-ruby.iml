@@ -23,5 +23,6 @@
     <orderEntry type="library" scope="PROVIDED" name="minitest-reporters (v1.0.19, jruby-9.0.0.0.rc2-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rake (v10.4.2, jruby-9.0.0.0.rc2-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.7.5, jruby-9.0.0.0.rc2-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="stomp (v1.3.4, jruby-9.0.0.0.rc2-p0) [gem]" level="application" />
   </component>
 </module>

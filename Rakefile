@@ -7,3 +7,8 @@ Rake::TestTask.new(:test) do |t|
 end
 
 task :default => :test
+
+desc 'Run the example'
+task :example do
+  sh 'jruby -I lib examples/solve.rb'
+end

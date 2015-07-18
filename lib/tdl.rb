@@ -1,3 +1,4 @@
+require 'stomp'
 
 require 'tdl/translator'
 require 'tdl/client'

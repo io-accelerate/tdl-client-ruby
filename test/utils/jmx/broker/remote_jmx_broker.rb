@@ -18,8 +18,6 @@ class RemoteJmxBroker
 
   #~~~~ Queue management
 
-
-
   def add_queue(queue_name)
     broker  = @jmx_session.find_by_name("org.apache.activemq:type=Broker,brokerName=#{@broker_name}")
     broker.add_queue(queue_name)

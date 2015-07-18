@@ -8,6 +8,11 @@ broker = JMX::MBean.find_by_name "org.apache.activemq:type=Broker,brokerName=TES
 puts broker.broker_version
 
 queue = JMX::MBean.find_by_name "org.apache.activemq:type=Broker,brokerName=TEST.BROKER,destinationType=Queue,destinationName=test.req"
-puts queue.operations
-# "send_text_message"=>["sendTextMessage", ["java.util.Map", "java.lang.String", "java.lang.String", "java.lang.String"]],
-# queue.send_text_message "hehe"
+
+# BUGFIX. We need to add the operation to the map, before we can call it
+queue.operations["send_text_message"] = ["sendTextMessage", ["java.lang.String"]]
+# puts queue.operations
+queue.send_text_message "from playground"
+
+queue.operations["browse"] = ["browse", []]
+puts queue.browse.map  { |compositeData| compositeData.get("Text") }

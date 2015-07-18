@@ -3,7 +3,7 @@ require 'tdl'
 require 'jmx4r'
 require 'utils/jmx/broker/remote_jmx_broker'
 require 'utils/jmx/broker/remote_jmx_queue'
-require 'utils/jmx/broker/active_mq_broker_rule'
+require 'utils/jmx/broker/testing/active_mq_broker_rule'
 
 require 'minitest/autorun'
 require 'minitest/reporters'
