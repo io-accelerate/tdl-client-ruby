@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'tdl/tdl'
+require 'test_helper'
 
 class ClientTest < MiniTest::Unit::TestCase
   def test_english_hello

@@ -1,5 +1,3 @@
-
-
 module TDL
 
   class Client
@@ -10,4 +8,3 @@ module TDL
   end
 
 end
-require 'tdl/client/translator'
