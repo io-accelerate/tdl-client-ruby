@@ -25,8 +25,7 @@ module TDL
         stomp_client = Stomp::Client.new('', '', @hostname, @port)
         stomp_client.subscribe("/queue/#{@username}.req", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
           response = do_something(user_implementation, msg.body)
-          puts "Check this-> #{response}, #{response.nil?}"
-          if response.nil?
+          if response.nil? || is_trial_run
             stomp_client.close
           else
             stomp_client.publish("/queue/#{@username}.resp", response)
@@ -35,8 +34,8 @@ module TDL
         end
 
         #DEBT: We should have no timeout here
-        @logger.info 'Stopping client.'
         stomp_client.join(3)
+        @logger.info 'Stopping client.'
         stomp_client.close
       rescue Exception => e
         @logger.error "Problem communicating with the broker. #{e.message}"
