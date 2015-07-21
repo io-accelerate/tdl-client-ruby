@@ -78,6 +78,14 @@ class ClientTest < Minitest::Test
     assert_queues_are_untouched
   end
 
+  def test_exit_gracefully_if_broker_not_available
+    @client = TDL::Client.new("#{HOSTNAME}1", STOMP_PORT, 'broker')
+
+    @client.go_live_with(&CORRECT_SOLUTION)
+
+    # No exception
+  end
+
 
   #~~~~ Utils
 
