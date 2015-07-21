@@ -71,6 +71,13 @@ class ClientTest < Minitest::Test
     assert_queues_are_untouched
   end
 
+  def test_throwing_exceptions_from_user_method_should_stop_all_processing
+
+    @client.go_live_with { || raise StandardError }
+
+    assert_queues_are_untouched
+  end
+
 
   #~~~~ Utils
 

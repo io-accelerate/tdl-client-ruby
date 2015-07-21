@@ -38,8 +38,16 @@ module TDL
       items.shift
       params = items
 
-      result = block.call(params)
+      begin
+        result = block.call(params)
+      rescue Exception => e
+        @logger.info "The user implementation has thrown exception. #{e.message}"
+        result = nil
+      end
 
+      if result.nil?
+        @logger.info 'User implementation has returned "nil"'
+      end
 
       processed_req = params.to_s.gsub('"', '')
       @logger.info "id = #{id}, req = #{processed_req}, resp = #{result}"
