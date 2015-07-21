@@ -12,41 +12,47 @@ module TDL
       @logger = Logging.logger[self]
     end
 
-    def go_live_with(&block)
+    def go_live_with(&user_implementation)
+      run(false, &user_implementation)
+    end
+
+    def trial_run_with(&user_implementation)
+      run(true, &user_implementation)
+    end
+
+    def run(is_trial_run, &user_implementation)
       begin
         stomp_client = Stomp::Client.new('', '', @hostname, @port)
         stomp_client.subscribe("/queue/#{@username}.req", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
-          response = do_something(block, msg.body)
+          response = do_something(user_implementation, msg.body)
           puts "Check this-> #{response}, #{response.nil?}"
           if response.nil?
-            puts 'Doing this'
             stomp_client.close
           else
-            puts 'Publishing'
             stomp_client.publish("/queue/#{@username}.resp", response)
             stomp_client.acknowledge(msg)
           end
         end
 
         #DEBT: We should have no timeout here
+        @logger.info 'Stopping client.'
         stomp_client.join(3)
         stomp_client.close
       rescue Exception => e
         @logger.error "Problem communicating with the broker. #{e.message}"
       end
-
     end
 
     # ~~~~ Processing
 
-    def do_something(block, request)
+    def do_something(user_implementation, request)
       items = request.split(', ')
       id = items[0]
       items.shift
       params = items
 
       begin
-        result = block.call(params)
+        result = user_implementation.call(params)
       rescue Exception => e
         @logger.info "The user implementation has thrown exception. #{e.message}"
         result = nil

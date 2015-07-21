@@ -86,6 +86,24 @@ class ClientTest < Minitest::Test
     # No exception
   end
 
+  #~~~~ Trial run
+
+  def test_a_trial_run_should_only_show_the_first_message_and_the_response
+
+    out = capture_subprocess_io do
+      @client.trial_run_with(&CORRECT_SOLUTION)
+    end
+
+    assert_list_contains(FIRST_EXPECTED_TEXT, out)
+    refute_list_contains(SECOND_EXPECTED_TEXT, out)
+  end
+
+  def test_if_user_does_a_trial_run_should_not_consume_or_publish_any_messages
+
+    @client.trial_run_with(&CORRECT_SOLUTION)
+
+    assert_queues_are_untouched
+  end
 
   #~~~~ Utils
 
@@ -98,9 +116,16 @@ class ClientTest < Minitest::Test
   end
 
   def assert_list_contains(expected_substring, list)
-    matches = list.select { |line| line.include? expected_substring }.count
-    assert matches == 1, "Expected #{list} to contain: \"#{expected_substring}\""
+    matches = count_occurrences(expected_substring, list)
+    assert_equal 1, matches, "Expected #{list} to contain: \"#{expected_substring}\""
   end
 
+  def refute_list_contains(expected_substring, list)
+    matches = count_occurrences(expected_substring, list)
+    refute_equal 1, matches, "Not expecting #{list} to contain: \"#{expected_substring}\""
+  end
 
+  def count_occurrences(expected_substring, list)
+    matches = list.select { |line| line.include? expected_substring }.count
+  end
 end
