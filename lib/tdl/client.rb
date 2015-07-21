@@ -5,7 +5,7 @@ module TDL
   class Client
 
     def initialize(hostname, port, username)
-      @stomp_client = Stomp::Client.new("", "", hostname, port)
+      @stomp_client = Stomp::Client.new('', '', hostname, port)
       @username = username
     end
 
@@ -28,17 +28,18 @@ module TDL
     # ~~~~ Processing
 
     def do_something(block, request)
-      p "Request #{request}"
-
       items = request.split(', ')
       id = items[0]
       items.shift
+      params = items
 
-      result = block.call(items)
+      result = block.call(params)
 
-      response = "#{id}, #{result}"
-      p "Response #{response}"
-      response
+
+      processed_req = params.to_s.gsub('"', '')
+      puts "id = #{id}, req = #{processed_req}, resp = #{result}"
+
+      "#{id}, #{result}"
     end
 
 
