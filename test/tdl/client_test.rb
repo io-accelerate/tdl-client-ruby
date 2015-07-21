@@ -1,5 +1,8 @@
 # noinspection RubyResolve,RubyResolve
 require 'test_helper'
+require 'logging'
+
+Logging.logger.root.appenders = Logging.appenders.stdout
 
 class ClientTest < Minitest::Test
   REQUESTS = [ 'X1, 0, 1', 'X2, 5, 6' ]
@@ -39,6 +42,7 @@ class ClientTest < Minitest::Test
     @client = TDL::Client.new(HOSTNAME, STOMP_PORT, USERNAME)
   end
 
+  #~~~~~ Go live
 
   def test_if_user_goes_live_client_should_process_all_messages
 
@@ -51,21 +55,37 @@ class ClientTest < Minitest::Test
 
   def test_a_run_should_show_the_messages_and_the_responses
 
-    out = capture_io do
+    out = capture_subprocess_io do
       @client.go_live_with(&CORRECT_SOLUTION)
     end
 
-    # Captured output
     EXPECTED_DISPLAYED_TEXT.each { |expected_line|
       assert_list_contains(expected_line, out)
     }
   end
 
-  # Helpers
+  def test_returning_null_from_user_method_should_stop_all_processing
+
+    @client.go_live_with { || nil }
+
+    assert_queues_are_untouched
+  end
+
+
+  #~~~~ Utils
+
+  def assert_queues_are_untouched
+    assert_equal @request_queue.get_size, REQUESTS.count,
+                 'The request queue has different size. Messages have been consumed'
+    assert_equal @response_queue.get_size, 0,
+                 'The response queue has different size. Messages have been published'
+
+  end
 
   def assert_list_contains(expected_substring, list)
     matches = list.select { |line| line.include? expected_substring }.count
     assert matches == 1, "Expected #{list} to contain: \"#{expected_substring}\""
   end
+
 
 end

@@ -21,10 +21,10 @@ queue.send_text_message 'from playground'
 # p bytes
 # p RubyString.bytes_to_string(bytes)
 
-queue.operations["browse"] = ["browse", []]
+queue.operations['browse'] = ['browse', []]
 puts queue.browse.take(1).map  { |compositeData|
-       if compositeData.containsKey("Text")
-         compositeData.containsKey("BodyPreview")
+       if compositeData.containsKey('Text')
+         compositeData.containsKey('BodyPreview')
        else
          compositeData.get("BodyPreview").to_a.pack('c*')
        end

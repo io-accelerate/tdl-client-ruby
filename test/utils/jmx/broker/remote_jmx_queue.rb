@@ -16,12 +16,12 @@ class RemoteJmxQueue
   end
 
   def get_message_contents()
-    @queue.operations["browse"] = ["browse", []]
+    @queue.operations['browse'] = ['browse', []]
     @queue.browse.map  { |compositeData|
-      if compositeData.containsKey("Text")
-        compositeData.containsKey("BodyPreview")
+      if compositeData.containsKey('Text')
+        compositeData.containsKey('BodyPreview')
       else
-        compositeData.get("BodyPreview").to_a.pack('c*')
+        compositeData.get('BodyPreview').to_a.pack('c*')
       end
     }
   end
