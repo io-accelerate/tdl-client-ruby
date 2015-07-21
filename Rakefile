@@ -1,4 +1,5 @@
 require 'rake/testtask'
+require 'coveralls/rake/task'
 
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
@@ -8,11 +9,13 @@ end
 
 task :default => :test
 
+Coveralls::RakeTask.new
+task :test_with_coveralls => [:test, 'coveralls:push']
+
 desc 'Run the example'
 task :example do
   sh 'jruby -I lib examples/solve.rb'
 end
-
 
 desc 'Run the test playground'
 task :playground do

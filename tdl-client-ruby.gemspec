@@ -25,4 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest', '5.4.1'
   spec.add_development_dependency 'minitest-reporters', '~>1.0.19'
   spec.add_development_dependency 'jmx4r', '~>0.1.4'
+  spec.add_development_dependency 'simplecov', '~>0.10.0'
+  spec.add_development_dependency 'coveralls', '~>0.8.2'
 end
