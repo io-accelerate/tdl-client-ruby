@@ -2,7 +2,11 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'simplecov'
 require 'coveralls'
-SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+]
 SimpleCov.start do
   add_filter '/test/'
 end
@@ -19,3 +23,4 @@ MiniTest::Reporters.use!
 
 require 'logging'
 Logging.logger.root.appenders = Logging.appenders.stdout
+Logging.logger.root.level = :debug

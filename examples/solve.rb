@@ -2,6 +2,8 @@ require 'tdl'
 require 'logging'
 
 Logging.logger.root.appenders = Logging.appenders.stdout
+Logging.logger.root.level = :info
+
 
 client = TDL::Client.new('localhost', 21613, 'test')
 

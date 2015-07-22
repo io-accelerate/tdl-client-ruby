@@ -1,14 +1,8 @@
 require 'stomp'
 require 'logging'
 
-require 'simplecov'
-require 'coveralls'
-
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-]
-SimpleCov.start
+require 'tdl/transport/remote_broker'
+require 'tdl/deserialize_and_respond_to_message'
 
 module TDL
 
@@ -22,61 +16,55 @@ module TDL
     end
 
     def go_live_with(&user_implementation)
-      run(false, &user_implementation)
+      run(RespondToAllRequests.new(DeserializeAndRespondToMessage.using(user_implementation)))
     end
 
     def trial_run_with(&user_implementation)
-      run(true, &user_implementation)
+      run(PeekAtFirstRequest.new(DeserializeAndRespondToMessage.using(user_implementation)))
     end
 
-    def run(is_trial_run, &user_implementation)
+    def run(handling_strategy)
       begin
-        stomp_client = Stomp::Client.new('', '', @hostname, @port)
-        stomp_client.subscribe("/queue/#{@username}.req", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
-          response = do_something(user_implementation, msg.body)
-          if response.nil? || is_trial_run
-            stomp_client.close
-          else
-            stomp_client.publish("/queue/#{@username}.resp", response)
-            stomp_client.acknowledge(msg)
-          end
-        end
+        remote_broker = RemoteBroker.new(@hostname, @port, @username)
+        remote_broker.subscribe(handling_strategy)
 
-        #DEBT: We should have no timeout here
-        stomp_client.join(3)
+        #DEBT: We should have no timeout here. We could put a special message in the queue
+        remote_broker.join(3)
         @logger.info 'Stopping client.'
-        stomp_client.close
+        remote_broker.close
       rescue Exception => e
         @logger.error "Problem communicating with the broker. #{e.message}"
       end
     end
 
-    # ~~~~ Processing
+    #~~~~ Queue handling policies
 
-    def do_something(user_implementation, request)
-      items = request.split(', ')
-      id = items[0]
-      items.shift
-      params = items
-
-      begin
-        result = user_implementation.call(params)
-      rescue Exception => e
-        @logger.info "The user implementation has thrown exception. #{e.message}"
-        result = nil
+    class RespondToAllRequests
+      def initialize(message_handler)
+        @message_handler = message_handler
       end
 
-      if result.nil?
-        @logger.info 'User implementation has returned "nil"'
+      def process_next_message_from(remote_broker, msg)
+        response = @message_handler.respond_to(msg.body)
+        if response.nil?
+          remote_broker.close
+        else
+          remote_broker.publish(response)
+          remote_broker.acknowledge(msg)
+        end
       end
-
-      processed_req = params.to_s.gsub('"', '')
-      @logger.info "id = #{id}, req = #{processed_req}, resp = #{result}"
-
-      (result == nil) ? nil : "#{id}, #{result}"
     end
 
+    class PeekAtFirstRequest
+      def initialize(message_handler)
+        @message_handler = message_handler
+      end
+
+      def process_next_message_from(remote_broker, msg)
+        @message_handler.respond_to(msg.body)
+        remote_broker.close
+      end
+    end
 
   end
-
 end
