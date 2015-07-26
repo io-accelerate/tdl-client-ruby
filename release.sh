@@ -14,8 +14,8 @@ then
 fi
 
 # Release current version
-#git tag -a "v${CURRENT_VERSION}" -m "Release ${CURRENT_VERSION}"
-#git push origin "v${CURRENT_VERSION}"
+git tag -a "v${CURRENT_VERSION}" -m "Release ${CURRENT_VERSION}"
+git push origin "v${CURRENT_VERSION}"
 echo "Pushed tag to Git origin. It will now trigger the deployment pipeline."
 
 # Increment version
