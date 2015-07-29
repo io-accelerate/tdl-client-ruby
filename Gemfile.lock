@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tdl-client-ruby (0.0.1)
+    tdl-client-ruby (0.0.4)
       logging (= 2.0.0)
       stomp (= 1.3.4)
 

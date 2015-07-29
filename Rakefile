@@ -20,7 +20,7 @@ task :test_with_coveralls => [:test, 'coveralls:push']
 
 desc 'Run the example'
 task :example do
-  sh 'jruby -I lib examples/solve.rb'
+  sh 'jruby -I lib examples/add_numbers.rb'
 end
 
 
