@@ -38,7 +38,8 @@ GEM
       ruby-progressbar
     multi_json (1.11.2)
     netrc (0.10.3)
-    psych (2.0.14.pre1-java)
+    psych (2.0.15)
+    psych (2.0.15-java)
       jar-dependencies (>= 0.1.7)
     rake (10.4.2)
     rest-client (1.8.0)
@@ -66,15 +67,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.10)
+  bundler (~> 1.9)
   coveralls (~> 0.8.2)
   jmx4r (~> 0.1.4)
   minitest (= 5.4.1)
   minitest-reporters (~> 1.0, >= 1.0.19)
-  psych (~> 2.0, >= 2.0.13)
+  psych (~> 2.0, >= 2.0.14)
   rake (~> 10.0)
   simplecov (~> 0.10.0)
   tdl-client-ruby!
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
