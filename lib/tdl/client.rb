@@ -25,6 +25,7 @@ module TDL
 
     def run(handling_strategy)
       begin
+        @logger.info 'Starting client.'
         remote_broker = RemoteBroker.new(@hostname, @port, @username)
         remote_broker.subscribe(handling_strategy)
 
