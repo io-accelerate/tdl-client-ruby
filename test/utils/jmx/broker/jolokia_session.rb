@@ -24,7 +24,7 @@ class JolokiaSession
 
   def request(jolokia_payload)
     json_payload = jolokia_payload.to_json
-    puts "Payload: #{json_payload}"
+    # puts "Payload: #{json_payload}"
 
     http_request = Net::HTTP::Post.new(@uri, initheader = {'Content-Type' => 'application/json'})
     http_request.body = json_payload

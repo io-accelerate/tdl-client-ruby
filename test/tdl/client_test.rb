@@ -17,9 +17,9 @@ class ClientTest < Minitest::Test
     x + y
   }
 
-  # Broker JMX definition
+  # Jolokia JMX definition
   HOSTNAME = 'localhost'
-  JMX_PORT = 20011
+  JMX_PORT = 28161
   BROKER_NAME = 'TEST.BROKER'
 
   @@broker = ActiveMQBrokerRule.new(HOSTNAME, JMX_PORT, BROKER_NAME)

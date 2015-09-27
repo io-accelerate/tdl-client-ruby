@@ -8,7 +8,7 @@ class RemoteJmxBroker
 
   def self.connect(host, port, broker_name)
     begin
-      jolokia_session = JolokiaSession.connect('localhost',28161)
+      jolokia_session = JolokiaSession.connect(host, port)
     rescue Exception => e
       puts "Broker is busted: #{e}"
     end
