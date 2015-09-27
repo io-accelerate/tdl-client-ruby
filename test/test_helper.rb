@@ -12,9 +12,9 @@ SimpleCov.start do
 end
 
 require 'tdl'
-require 'jmx4r'
 require 'json'
 require 'net/http'
+require 'utils/jmx/broker/jolokia_session'
 require 'utils/jmx/broker/remote_jmx_broker'
 require 'utils/jmx/broker/remote_jmx_queue'
 require 'utils/jmx/broker/testing/active_mq_broker_rule'

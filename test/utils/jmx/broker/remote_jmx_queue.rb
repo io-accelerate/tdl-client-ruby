@@ -1,33 +1,54 @@
 
 class RemoteJmxQueue
 
-  def initialize(jmx_session, broker_name, queue_name)
-    @queue = jmx_session.find_by_name("org.apache.activemq:type=Broker,brokerName=#{broker_name}"\
-          ",destinationType=Queue,destinationName=#{queue_name}")
+  def initialize(jolokia_session, broker_name, queue_name)
+    @jolokia_session = jolokia_session
+    @broker_name = broker_name
+    @queue_name = queue_name
   end
 
   def send_text_message(request)
-    @queue.operations['send_text_message'] = ['sendTextMessage', ['java.lang.String']]
-    @queue.send_text_message(request)
+    operation = {
+        type: 'exec',
+        mbean: "org.apache.activemq:type=Broker,brokerName=#{@broker_name},destinationType=Queue,destinationName=#{@queue_name}",
+        operation: 'sendTextMessage(java.lang.String)',
+        arguments: [ request ]
+    }
+    @jolokia_session.request(operation)
   end
 
-  def get_size()
-    @queue.queue_size
+  def get_size
+    attribute = {
+        type: 'read',
+        mbean: "org.apache.activemq:type=Broker,brokerName=#{@broker_name},destinationType=Queue,destinationName=#{@queue_name}",
+        attribute: 'QueueSize',
+    }
+    @jolokia_session.request(attribute)
   end
 
-  def get_message_contents()
-    @queue.operations['browse'] = ['browse', []]
-    @queue.browse.map  { |compositeData|
-      if compositeData.containsKey('Text')
-        compositeData.containsKey('BodyPreview')
+  def get_message_contents
+    operation = {
+        type: 'exec',
+        mbean: "org.apache.activemq:type=Broker,brokerName=#{@broker_name},destinationType=Queue,destinationName=#{@queue_name}",
+        operation: 'browse()',
+    }
+    result = @jolokia_session.request(operation)
+    result.map  { |composite_data|
+      if composite_data.has_key?('Text')
+        composite_data['Text']
       else
-        compositeData.get('BodyPreview').to_a.pack('c*')
+        composite_data['BodyPreview'].to_a.pack('c*')
       end
     }
   end
 
   def purge
-    @queue.purge
+    operation = {
+        type: 'exec',
+        mbean: "org.apache.activemq:type=Broker,brokerName=#{@broker_name},destinationType=Queue,destinationName=#{@queue_name}",
+        operation: 'purge()',
+    }
+    @jolokia_session.request(operation)
   end
 
 end

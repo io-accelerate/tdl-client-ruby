@@ -1,27 +1,32 @@
 
 class RemoteJmxBroker
 
-  def initialize(jmx_session, broker_name)
-    @jmx_session = jmx_session
+  def initialize(jolokia_session, broker_name)
+    @jolokia_session = jolokia_session
     @broker_name = broker_name
   end
 
   def self.connect(host, port, broker_name)
     begin
-      JMX::MBean.establish_connection(:host => host, :port => port)
+      jolokia_session = JolokiaSession.connect('localhost',28161)
     rescue Exception => e
       puts "Broker is busted: #{e}"
     end
 
-    RemoteJmxBroker.new(JMX::MBean, broker_name)
+    RemoteJmxBroker.new(jolokia_session, broker_name)
   end
 
   #~~~~ Queue management
 
   def add_queue(queue_name)
-    broker  = @jmx_session.find_by_name("org.apache.activemq:type=Broker,brokerName=#{@broker_name}")
-    broker.add_queue(queue_name)
-    RemoteJmxQueue.new(@jmx_session, @broker_name, queue_name)
+    operation = {
+        type: 'exec',
+        mbean: "org.apache.activemq:type=Broker,brokerName=#{@broker_name}",
+        operation: 'addQueue',
+        arguments: [queue_name]
+    }
+    @jolokia_session.request(operation)
+    RemoteJmxQueue.new(@jolokia_session, @broker_name, queue_name)
   end
 
 end
