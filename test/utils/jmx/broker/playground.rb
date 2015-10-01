@@ -1,6 +1,6 @@
 
 require 'json'
-require './jolokia_session'
+require_relative './jolokia_session'
 
 
 jolokia_session = JolokiaSession.connect('localhost',28161)
