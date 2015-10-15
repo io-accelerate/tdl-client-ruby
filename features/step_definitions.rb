@@ -96,10 +96,13 @@ Then(/^I should get no exception$/) do
 end
 
 When(/^I do a trial run with an implementation that adds two numbers$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @captured_io = capture_subprocess_io do
+    @client.trial_run_with(&CORRECT_SOLUTION)
+  end
 end
 
 Then(/^the client should not display to console:$/) do |table|
-  # table is a Cucumber::Core::Ast::DataTable
-  pending # Write code here that turns the phrase above into concrete actions
+  table.raw.flatten.each { |row|
+    refute_includes @captured_io.join(""), row
+  }
 end
