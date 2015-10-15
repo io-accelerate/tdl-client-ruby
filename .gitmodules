@@ -1,3 +1,6 @@
 [submodule "broker"]
 	path = broker
 	url = git@github.com:julianghionoiu/tdl-client-test-broker.git
+[submodule "features/spec"]
+	path = features/spec
+	url = git@github.com:julianghionoiu/tdl-client-spec.git
