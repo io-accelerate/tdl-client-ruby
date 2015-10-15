@@ -36,7 +36,8 @@ class RemoteJmxQueue
       if composite_data.has_key?('Text')
         composite_data['Text']
       else
-        composite_data['BodyPreview'].to_a.pack('c*')
+        # DEBT does odd things with body preview
+        composite_data['BodyPreview'].to_a.pack('c*')[2..-1]
       end
     }
   end

@@ -1,4 +1,7 @@
 require_relative "./test_helper"
+require 'logging'
+
+Logging.logger.root.appenders = Logging.appenders.stdout
 
 REQUESTS = [ 'X1, 0, 1', 'X2, 5, 6' ]
 EXPECTED_RESPONSES = ['X1, 1', 'X2, 11']
@@ -9,6 +12,7 @@ EXPECTED_DISPLAYED_TEXT = [ FIRST_EXPECTED_TEXT, SECOND_EXPECTED_TEXT ]
 CORRECT_SOLUTION = lambda { |params|
   x = params[0].to_i
   y = params[1].to_i
+  x + y
 }
 
 # Jolokia JMX definition
@@ -48,9 +52,7 @@ Then(/^the client should consume all requests$/) do
 end
 
 Then(/^the client should publish the following responses:$/) do |table|
-  puts "XXXXXXXXXXXXX"
-  puts table.raw
-  assert_equal table.raw, @response_queue.get_message_contents, 'The responses are not correct'
+  assert_equal table.raw.flatten, @response_queue.get_message_contents, 'The responses are not correct'
 end
 
 Then(/^the client should display to console:$/) do |table|
