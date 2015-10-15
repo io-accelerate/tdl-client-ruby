@@ -11,8 +11,11 @@ module TDL
     def respond_to(request)
       response = @wrapped_strategy.respond_to(request)
 
-      pretty_print_params = request.params.to_s.gsub('"', '')
-      @logger.info "id = #{request.id}, req = #{pretty_print_params}, resp = #{response.result}"
+      #DEBT parameters contain strange charachters from CSV parsing.
+      pretty_print_params = "[" + request.params.map{|e| e.gsub(/([^\w\d]+)/, "")}.join(", ") + "]"
+
+      request_id = request.id.gsub(/([^\w\d]+)/, "")
+      @logger.info "id = #{request_id}, req = #{pretty_print_params}, resp = #{response.result}"
 
       response
     end

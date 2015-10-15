@@ -59,10 +59,9 @@ Then(/^the client should publish the following responses:$/) do |table|
 end
 
 Then(/^the client should display to console:$/) do |table|
-  # puts @captured_io
-  # puts table.raw
-  # DEBT check logger
-  true
+  table.raw.flatten.each { |row|
+    assert_includes @captured_io.join(""), row
+  }
 end
 
 When(/^I go live with an implementation that returns null$/) do
