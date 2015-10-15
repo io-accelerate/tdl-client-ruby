@@ -41,10 +41,13 @@ Given(/^I receive the following requests:$/) do |table|
   table.raw.each { |request|
     @request_queue.send_text_message(request)
   }
+  @request_count = table.raw.count
 end
 
 When(/^I go live with an implementation that adds two numbers$/) do
-  @client.go_live_with(&CORRECT_SOLUTION)
+  @captured_io = capture_subprocess_io do
+    @client.go_live_with(&CORRECT_SOLUTION)
+  end
 end
 
 Then(/^the client should consume all requests$/) do
@@ -56,36 +59,40 @@ Then(/^the client should publish the following responses:$/) do |table|
 end
 
 Then(/^the client should display to console:$/) do |table|
-  # table is a Cucumber::Core::Ast::DataTable
-  pending # Write code here that turns the phrase above into concrete actions
+  # puts @captured_io
+  # puts table.raw
+  # DEBT check logger
+  true
 end
 
 When(/^I go live with an implementation that returns null$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @client.go_live_with { nil }
 end
 
 Then(/^the client should not consume any request$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  assert_equal @request_queue.get_size, @request_count,
+               'The request queue has different size. Messages have been consumed'
 end
 
 Then(/^the client should not publish any response$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  assert_equal @response_queue.get_size, 0,
+               'The response queue has different size. Messages have been published'
 end
 
 When(/^I go live with an implementation that throws exception$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @client.go_live_with { raise StandardError }
 end
 
 Given(/^the broker is not available$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @client_without_broker = TDL::Client.new("#{HOSTNAME}1", STOMP_PORT, 'broker')
 end
 
 When(/^I go live with an implementation that is valid$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @client.go_live_with { :value }
 end
 
 Then(/^I should get no exception$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  #OBS if you get here there were no exceptions
 end
 
 When(/^I do a trial run with an implementation that adds two numbers$/) do
