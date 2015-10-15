@@ -5,3 +5,16 @@
 
 # tdl-client-ruby
 tdl-client-ruby
+
+# Installing
+
+# Testing
+
+All test require the ActiveMQ broker to be started.
+The following commands are available for the broker.
+
+```
+./broker/activemq-wrapper start
+./broker/activemq-wrapper console
+./broker/activemq-wrapper stop
+```
