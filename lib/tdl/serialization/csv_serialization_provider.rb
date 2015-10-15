@@ -8,6 +8,9 @@ module TDL
     end
 
     def deserialize(message_text)
+      # IO.inspect message_text
+      # IO.inspect message_text.class
+
       items = message_text.split(', ', 2)
       @logger.debug("Received items: #{items}")
 
