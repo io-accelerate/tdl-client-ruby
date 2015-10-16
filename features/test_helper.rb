@@ -9,6 +9,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 ]
 SimpleCov.start do
   add_filter '/test/'
+  add_filter '/features/'
 end
 
 require 'tdl'

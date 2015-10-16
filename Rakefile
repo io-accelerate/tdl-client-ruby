@@ -12,26 +12,26 @@ end
 
 task :default => :test
 
-Coveralls::RakeTask.new
-task :test_with_coveralls => [:test, 'coveralls:push']
-
 require 'cucumber/rake/task'
 
 Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "features --format pretty --tags ~@wip"
+  t.cucumber_opts = 'features'
 end
+
+Coveralls::RakeTask.new
+task :features_with_coveralls => [:features, 'coveralls:push']
 
 #~~~~~~~~~ Play
 
 desc 'Run the example'
 task :example do
-  sh 'jruby -I lib examples/add_numbers.rb'
+  sh 'ruby -I lib examples/add_numbers.rb'
 end
 
 
 desc 'Run the test playground'
 task :playground do
-  sh 'jruby -I lib ./test/utils/jmx/broker/playground.rb'
+  sh 'ruby -I lib ./features/utils/jmx/broker/playground.rb'
 end
 
 
