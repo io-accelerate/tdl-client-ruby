@@ -3,13 +3,9 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tdl/version'
 
-SPEC_FOLDER = File.expand_path('../features/spec',__FILE__).to_s
-MAJOR_MINOR_VERSION = `git --git-dir #{SPEC_FOLDER}/.git describe --all | cut -d '/' -f 2 | tr -d 'v'`.strip
-VERSION = "#{MAJOR_MINOR_VERSION}.#{TDL::CURRENT_PATCH_VERSION}"
-
 Gem::Specification.new do |spec|
   spec.name          = 'tdl-client-ruby'
-  spec.version       = VERSION
+  spec.version       = TDL.version
   spec.authors       = ['Julian Ghionoiu']
   spec.email         = ['iulian.ghionoiu@gmail.com']
 

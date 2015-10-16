@@ -44,5 +44,5 @@ task :build do
 end
 
 task :release => :build do
-  system "gem push tdl-client-ruby-#{TDL::VERSION}.gem"
+  system "gem push tdl-client-ruby-*.gem"
 end
