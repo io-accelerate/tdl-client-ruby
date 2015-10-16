@@ -1,3 +1,5 @@
 module TDL
-  VERSION = '0.0.5'
+  PREVIOUS_VERSION = '0.0.4'
+  # the current MAJOR.MINOR version is dynamically computed from the version of the Spec
+  CURRENT_PATCH_VERSION = '0'
 end

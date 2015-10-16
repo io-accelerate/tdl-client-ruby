@@ -3,9 +3,13 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tdl/version'
 
+SPEC_FOLDER = File.expand_path('../features/spec',__FILE__).to_s
+MAJOR_MINOR_VERSION = `git --git-dir #{SPEC_FOLDER}/.git describe --all | cut -d '/' -f 2 | tr -d 'v'`.strip
+VERSION = "#{MAJOR_MINOR_VERSION}.#{TDL::CURRENT_PATCH_VERSION}"
+
 Gem::Specification.new do |spec|
   spec.name          = 'tdl-client-ruby'
-  spec.version       = TDL::VERSION
+  spec.version       = VERSION
   spec.authors       = ['Julian Ghionoiu']
   spec.email         = ['iulian.ghionoiu@gmail.com']
 
@@ -27,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest-reporters', '~> 1.0', '>= 1.0.19'
   spec.add_development_dependency 'simplecov', '~>0.10.0'
   spec.add_development_dependency 'coveralls', '~>0.8.2'
-  spec.add_development_dependency 'json', '~>1.8.3'
-  spec.add_development_dependency 'cucumber', '~>2.0.0'
+  spec.add_development_dependency 'json', '~> 1.8', '~>1.8.3'
+  spec.add_development_dependency 'cucumber', '>= 2.0.0', '<2.1.0'
   spec.add_development_dependency 'debase', '~>0.1.4'
 end
