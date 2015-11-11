@@ -15,11 +15,11 @@ module TDL
       @logger = Logging.logger[self]
     end
 
-    def go_live_with(&user_implementation)
+    def go_live_with(user_implementation)
       run(RespondToAllRequests.new(DeserializeAndRespondToMessage.using(user_implementation)))
     end
 
-    def trial_run_with(&user_implementation)
+    def trial_run_with(user_implementation)
       run(PeekAtFirstRequest.new(DeserializeAndRespondToMessage.using(user_implementation)))
     end
 
@@ -35,6 +35,7 @@ module TDL
         remote_broker.close
       rescue Exception => e
         @logger.error "Problem communicating with the broker. #{e.message}"
+        raise $! if ENV["RUBY_ENV"] == "test"
       end
     end
 

@@ -18,3 +18,7 @@ The following commands are available for the broker.
 ./broker/activemq-wrapper console
 ./broker/activemq-wrapper stop
 ```
+
+Run tests with `rake features`.
+To run a single scenario execute `cucumber path/to/file.feature:line_no`
+Recommendation is to use the cucumber command instead of rake always outside of CI.

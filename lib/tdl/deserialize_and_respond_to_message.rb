@@ -1,4 +1,4 @@
-require 'tdl/serialization/csv_serialization_provider'
+require 'tdl/serialization/json_rpc_serialization_provider'
 require 'tdl/respond/validate_response'
 require 'tdl/respond/audit_traffic'
 require 'tdl/respond/obtain_response'
@@ -6,7 +6,7 @@ require 'tdl/respond/obtain_response'
 module TDL
   class DeserializeAndRespondToMessage
     def initialize(user_implementation)
-      @serialization_provider = CsvSerializationProvider.new
+      @serialization_provider = JSONRPCSerializationProvider.new
       @response_strategy = ValidateResponse.new(AuditTraffic.new(ObtainResponse.new(user_implementation)))
       @logger = Logging.logger[self]
     end

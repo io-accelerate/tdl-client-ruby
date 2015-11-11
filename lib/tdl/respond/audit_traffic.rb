@@ -11,11 +11,8 @@ module TDL
     def respond_to(request)
       response = @wrapped_strategy.respond_to(request)
 
-      #DEBT parameters contain strange charachters from CSV parsing.
-      pretty_print_params = "[" + request.params.map{|e| e.gsub(/([^\w\d]+)/, "")}.join(", ") + "]"
-
-      request_id = request.id.gsub(/([^\w\d]+)/, "")
-      @logger.info "id = #{request_id}, req = #{pretty_print_params}, resp = #{response.result}"
+      @logger.info "id = #{request.id}, req = #{request.to_h[:method]}(#{request.params.join(", ")}), resp = #{response.result}"
+      # DEBT method method taken on ostruct
 
       response
     end
