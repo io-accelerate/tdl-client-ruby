@@ -16,7 +16,6 @@ module TDL
     end
 
     def serialize(response)
-      # (response == nil) ? nil : "#{response.id}, #{response.result}"
       hash = response.to_h
       JSON.unparse(hash)
     end

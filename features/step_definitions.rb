@@ -73,10 +73,9 @@ When(/^I go live with the following implementations:$/) do |table|
     out[method_name] = IMPLEMENTATION_MAP.fetch(implementation_name)
   end
 
-  # @captured_io = capture_subprocess_io do
+  @captured_io = capture_subprocess_io do
     @client.go_live_with(OpenStruct.new(method_map))
-
-  # end
+  end
 
 end
 

@@ -16,11 +16,8 @@ module TDL
     end
 
     def respond_to(message_text)
-      # puts message_text
       request = @serialization_provider.deserialize(message_text)
-      # puts request
       response = @response_strategy.respond_to(request)
-      # puts response
       @serialization_provider.serialize(response)
     end
   end
