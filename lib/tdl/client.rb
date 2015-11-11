@@ -19,7 +19,7 @@ module TDL
       run(RespondToAllRequests.new(DeserializeAndRespondToMessage.using(user_implementation)))
     end
 
-    def trial_run_with(&user_implementation)
+    def trial_run_with(user_implementation)
       run(PeekAtFirstRequest.new(DeserializeAndRespondToMessage.using(user_implementation)))
     end
 

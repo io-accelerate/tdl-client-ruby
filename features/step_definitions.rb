@@ -55,7 +55,7 @@ IMPLEMENTATION_MAP = {
     },
     'returns null' => lambda { |*args| nil },
     'throws exception' => lambda { raise StandardError },
-    'is valid' => lambda { :value },
+    'some logic' => lambda { :value },
     'increment number' => ->(x){ x + 1 }
 }
 
@@ -80,8 +80,13 @@ When(/^I go live with the following implementations:$/) do |table|
 end
 
 When(/^I do a trial run with the following implementations:$/) do |table|
-  # table is a Cucumber::Core::Ast::DataTable
-  pending # Write code here that turns the phrase above into concrete actions
+  method_map = table.raw.each_with_object({}) do |(method_name, implementation_name), out|
+    out[method_name] = IMPLEMENTATION_MAP.fetch(implementation_name)
+  end
+
+  @captured_io = capture_subprocess_io do
+    @client.trial_run_with(OpenStruct.new(method_map))
+  end
 end
 
 
