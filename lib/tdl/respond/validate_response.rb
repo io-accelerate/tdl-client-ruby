@@ -11,6 +11,7 @@ module TDL
     def respond_to(request)
       response = @wrapped_strategy.respond_to(request)
       (response.result == nil) ? nil : response
+      # DEBT should pass nil response to top level
     end
   end
 end

@@ -16,8 +16,10 @@ module TDL
     end
 
     def serialize(response)
-      hash = response.to_h
-      JSON.unparse(hash)
+      if response
+        hash = response.to_h
+        JSON.unparse(hash)
+      end
     end
   end
 end
