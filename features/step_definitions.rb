@@ -46,37 +46,16 @@ end
 
 # ~~~~~ Implementations
 
-
-IMPLEMENTATION_MAP = {
-    'adds two numbers' => lambda { |params|
-      x = params[0].to_i
-      y = params[1].to_i
-      x + y
-    },
-    'returns null' => lambda { nil },
-    'throws exception' => lambda { raise StandardError },
-    'is valid' => lambda { :value },
-}
-
-def get_lambda(name)
-  if IMPLEMENTATION_MAP.has_key?(name)
-    IMPLEMENTATION_MAP[name]
-  else
-    raise "Not a valid implementation reference: \"#{name}\""
-  end
+When(/^I go live with the following implementations:$/) do |table|
+  # table is a Cucumber::Core::Ast::DataTable
+  pending # Write code here that turns the phrase above into concrete actions
 end
 
-When(/^I go live with an implementation that (.*)$/) do |implementation_name|
-  @captured_io = capture_subprocess_io do
-    @client.go_live_with(&get_lambda(implementation_name))
-  end
+When(/^I do a trial run with the following implementations:$/) do |table|
+  # table is a Cucumber::Core::Ast::DataTable
+  pending # Write code here that turns the phrase above into concrete actions
 end
 
-When(/^I do a trial run with an implementation that (.*)$/) do |implementation_name|
-  @captured_io = capture_subprocess_io do
-    @client.trial_run_with(&get_lambda(implementation_name))
-  end
-end
 
 # ~~~~~ Assertions
 
@@ -113,5 +92,3 @@ end
 Then(/^I should get no exception$/) do
   #OBS if you get here there were no exceptions
 end
-
-
