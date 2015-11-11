@@ -46,9 +46,38 @@ end
 
 # ~~~~~ Implementations
 
+IMPLEMENTATION_MAP = {
+    'adds two numbers' => lambda { |x, y|
+      # x = params[0].to_i
+      # y = params[1].to_i
+      x + y
+      # ->(x, y){x.to_i + y.to_i}
+    },
+    'returns null' => lambda { nil },
+    'throws exception' => lambda { raise StandardError },
+    'is valid' => lambda { :value },
+    'increment number' => ->(x){ x + 1 }
+}
+
+# Not necessary use hash.fetch(key)
+def get_lambda(name)
+  if IMPLEMENTATION_MAP.has_key?(name)
+    IMPLEMENTATION_MAP[name]
+  else
+    raise "Not a valid implementation reference: \"#{name}\""
+  end
+end
+
 When(/^I go live with the following implementations:$/) do |table|
-  # table is a Cucumber::Core::Ast::DataTable
-  pending # Write code here that turns the phrase above into concrete actions
+  method_map = table.raw.each_with_object({}) do |(method_name, implementation_name), out|
+    out[method_name] = IMPLEMENTATION_MAP.fetch(implementation_name)
+  end
+
+  # @captured_io = capture_subprocess_io do
+    @client.go_live_with(OpenStruct.new(method_map))
+
+  # end
+
 end
 
 When(/^I do a trial run with the following implementations:$/) do |table|
