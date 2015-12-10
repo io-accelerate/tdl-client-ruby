@@ -8,8 +8,7 @@ module TDL
     end
 
     def deserialize(message_text)
-      json = JSON.parse(message_text).first
-      json = JSON.parse(json)
+      json = JSON.parse(message_text)
 
       OpenStruct.new(json)
       # DEBT means there is no Request object needed
