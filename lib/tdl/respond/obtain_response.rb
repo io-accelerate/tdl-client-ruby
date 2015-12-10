@@ -16,7 +16,7 @@ module TDL
 
         # DEBT object is treated and a collection of anonymous methods and not a normal object this is not ideomatic ruby
 
-        result = @user_implementation.send(request.to_h[:method]).(*request.params)
+        result = @user_implementation.send(request.to_h[:method], *request.params)
       rescue Exception => e
         @logger.info "The user implementation has thrown exception. #{e.message}"
         result = nil
