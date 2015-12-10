@@ -69,23 +69,25 @@ def get_lambda(name)
 end
 
 When(/^I go live with the following implementations:$/) do |table|
-  method_map = table.raw.each_with_object({}) do |(method_name, implementation_name), out|
-    out[method_name] = IMPLEMENTATION_MAP.fetch(implementation_name)
+  implementation = table.raw.each_with_object(Object.new) do |(method_name, implementation_name), implementation|
+    implementation.define_singleton_method(method_name, &IMPLEMENTATION_MAP.fetch(implementation_name))
+    implementation
   end
 
   @captured_io = capture_subprocess_io do
-    @client.go_live_with(OpenStruct.new(method_map))
+    @client.go_live_with(implementation)
   end
 
 end
 
 When(/^I do a trial run with the following implementations:$/) do |table|
-  method_map = table.raw.each_with_object({}) do |(method_name, implementation_name), out|
-    out[method_name] = IMPLEMENTATION_MAP.fetch(implementation_name)
+  implementation = table.raw.each_with_object(Object.new) do |(method_name, implementation_name), implementation|
+    implementation.define_singleton_method(method_name, &IMPLEMENTATION_MAP.fetch(implementation_name))
+    implementation
   end
 
   @captured_io = capture_subprocess_io do
-    @client.trial_run_with(OpenStruct.new(method_map))
+    @client.trial_run_with(implementation)
   end
 end
 
