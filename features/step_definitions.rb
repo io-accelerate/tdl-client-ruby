@@ -8,7 +8,6 @@ CORRECT_SOLUTION = lambda { |params|
   y = params[1].to_i
   x + y
 }
-
 # Jolokia JMX definition
 HOSTNAME = 'localhost'
 JMX_PORT = 28161
@@ -39,7 +38,7 @@ end
 
 Given(/^I receive the following requests:$/) do |table|
   table.raw.each { |request|
-    @request_queue.send_text_message(request)
+    @request_queue.send_text_message(request.first)
   }
   @request_count = table.raw.count
 end
@@ -77,7 +76,6 @@ When(/^I go live with the following implementations:$/) do |table|
   @captured_io = capture_subprocess_io do
     @client.go_live_with(implementation)
   end
-
 end
 
 When(/^I do a trial run with the following implementations:$/) do |table|
