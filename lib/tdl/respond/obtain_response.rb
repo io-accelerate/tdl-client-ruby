@@ -3,8 +3,8 @@ require 'tdl/abstractions/response'
 
 module TDL
   class ObtainResponse
-    def initialize(user_implementation)
-      @user_implementation = user_implementation
+    def initialize(processing_rules)
+      @processing_rules = processing_rules
       @logger = Logging.logger[self]
     end
 
@@ -16,7 +16,10 @@ module TDL
 
         # DEBT object is treated and a collection of anonymous methods and not a normal object this is not ideomatic ruby
 
-        result = @user_implementation.send(request.to_h[:method], *request.params)
+
+        processing_rule = @processing_rules.get_rule_for(request)
+        user_implementation = processing_rule.user_implementation
+        result = user_implementation.call(*request.params)
       rescue Exception => e
         @logger.info "The user implementation has thrown exception. #{e.message}"
         result = nil

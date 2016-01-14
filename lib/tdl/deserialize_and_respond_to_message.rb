@@ -5,14 +5,14 @@ require 'tdl/respond/obtain_response'
 
 module TDL
   class DeserializeAndRespondToMessage
-    def initialize(user_implementation)
+    def initialize(processing_rules)
       @serialization_provider = JSONRPCSerializationProvider.new
-      @response_strategy = ValidateResponse.new(AuditTraffic.new(ObtainResponse.new(user_implementation)))
+      @response_strategy = ValidateResponse.new(AuditTraffic.new(ObtainResponse.new(processing_rules)))
       @logger = Logging.logger[self]
     end
 
-    def self.using(user_implementation)
-      DeserializeAndRespondToMessage.new(user_implementation)
+    def self.using(processing_rules)
+      DeserializeAndRespondToMessage.new(processing_rules)
     end
 
     def respond_to(message_text)

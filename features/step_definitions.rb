@@ -46,14 +46,14 @@ end
 # ~~~~~ Implementations
 
 IMPLEMENTATION_MAP = {
-    'adds two numbers' => lambda { |x, y|
+    'add two numbers' => lambda { |x, y|
       # x = params[0].to_i
       # y = params[1].to_i
       x + y
       # ->(x, y){x.to_i + y.to_i}
     },
-    'returns null' => lambda { |*args| nil },
-    'throws exception' => lambda { raise StandardError },
+    'return null' => lambda { |*args| nil },
+    'throw exception' => lambda { raise StandardError },
     'some logic' => lambda { :value },
     'increment number' => ->(x){ x + 1 }
 }
@@ -67,25 +67,16 @@ def get_lambda(name)
   end
 end
 
-When(/^I go live with the following implementations:$/) do |table|
-  implementation = table.raw.each_with_object(Object.new) do |(method_name, implementation_name), implementation|
-    implementation.define_singleton_method(method_name, &IMPLEMENTATION_MAP.fetch(implementation_name))
-    implementation
+When(/^I go live with the following processing rules:$/) do |table|
+  processing_rules = TDL::ProcessingRules.new
+
+  table.hashes.each do |row|
+    implementation = IMPLEMENTATION_MAP.fetch(row[:Call])
+    processing_rules.add(row[:Method], implementation, row[:Action])
   end
 
   @captured_io = capture_subprocess_io do
-    @client.go_live_with(implementation)
-  end
-end
-
-When(/^I do a trial run with the following implementations:$/) do |table|
-  implementation = table.raw.each_with_object(Object.new) do |(method_name, implementation_name), implementation|
-    implementation.define_singleton_method(method_name, &IMPLEMENTATION_MAP.fetch(implementation_name))
-    implementation
-  end
-
-  @captured_io = capture_subprocess_io do
-    @client.trial_run_with(implementation)
+    @client.go_live_with(processing_rules)
   end
 end
 
@@ -94,6 +85,10 @@ end
 
 Then(/^the client should consume all requests$/) do
   assert_equal 0, @request_queue.get_size, 'Requests have not been consumed'
+end
+
+Then(/^the client should consume first request$/) do
+  assert_equal @request_count-1, @request_queue.get_size, 'Requests have not been consumed'
 end
 
 Then(/^the client should publish the following responses:$/) do |table|
@@ -113,12 +108,12 @@ Then(/^the client should not display to console:$/) do |table|
 end
 
 Then(/^the client should not consume any request$/) do
-  assert_equal @request_queue.get_size, @request_count,
+  assert_equal @request_count, @request_queue.get_size,
                'The request queue has different size. Messages have been consumed'
 end
 
 Then(/^the client should not publish any response$/) do
-  assert_equal @response_queue.get_size, 0,
+  assert_equal 0, @response_queue.get_size,
                'The response queue has different size. Messages have been published'
 end
 

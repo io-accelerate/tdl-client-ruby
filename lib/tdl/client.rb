@@ -3,6 +3,7 @@ require 'logging'
 
 require 'tdl/transport/remote_broker'
 require 'tdl/deserialize_and_respond_to_message'
+require 'tdl/abstractions/processing_rules'
 
 module TDL
 
@@ -15,12 +16,8 @@ module TDL
       @logger = Logging.logger[self]
     end
 
-    def go_live_with(user_implementation)
-      run(RespondToAllRequests.new(DeserializeAndRespondToMessage.using(user_implementation)))
-    end
-
-    def trial_run_with(user_implementation)
-      run(PeekAtFirstRequest.new(DeserializeAndRespondToMessage.using(user_implementation)))
+    def go_live_with(processing_rules)
+      run(RespondToAllRequests.new(DeserializeAndRespondToMessage.using(processing_rules)))
     end
 
     def run(handling_strategy)
@@ -54,17 +51,6 @@ module TDL
           remote_broker.publish(response)
           remote_broker.acknowledge(msg)
         end
-      end
-    end
-
-    class PeekAtFirstRequest
-      def initialize(message_handler)
-        @message_handler = message_handler
-      end
-
-      def process_next_message_from(remote_broker, msg)
-        @message_handler.respond_to(msg.body)
-        remote_broker.close
       end
     end
 
