@@ -2,8 +2,9 @@ require 'stomp'
 require 'logging'
 
 require 'tdl/transport/remote_broker'
-require 'tdl/deserialize_and_respond_to_message'
 require 'tdl/abstractions/processing_rules'
+
+require 'tdl/serialization/json_rpc_serialization_provider'
 
 module TDL
 
@@ -17,14 +18,10 @@ module TDL
     end
 
     def go_live_with(processing_rules)
-      run(RespondToAllRequests.new(DeserializeAndRespondToMessage.using(processing_rules)))
-    end
-
-    def run(handling_strategy)
       begin
         @logger.info 'Starting client.'
         remote_broker = RemoteBroker.new(@hostname, @port, @username)
-        remote_broker.subscribe(handling_strategy)
+        remote_broker.subscribe(ApplyProcessingRules.new(processing_rules))
 
         #DEBT: We should have no timeout here. We could put a special message in the queue
         remote_broker.join(3)
@@ -36,20 +33,66 @@ module TDL
       end
     end
 
+
     #~~~~ Queue handling policies
 
-    class RespondToAllRequests
-      def initialize(message_handler)
-        @message_handler = message_handler
+    class ApplyProcessingRules
+      def initialize(processing_rules)
+        @processing_rules = processing_rules
+        @serialization_provider = JSONRPCSerializationProvider.new
+        @logger = Logging.logger[self]
       end
 
       def process_next_message_from(remote_broker, msg)
-        response = @message_handler.respond_to(msg.body)
-        if response.nil?
-          remote_broker.close
+        request = @serialization_provider.deserialize(msg.body)
+
+        begin
+          # DEBT method is a default method on objects
+          # o = OpenStruct.new({method: 5})
+          # o.method !! Error
+
+          # DEBT object is treated and a collection of anonymous methods and not a normal object this is not ideomatic ruby
+          processing_rule = @processing_rules.get_rule_for(request)
+          user_implementation = processing_rule.user_implementation
+          result = user_implementation.call(*request.params)
+
+          should_publish = false
+          if processing_rule.client_action.include? 'publish'
+            should_publish = true
+          end
+
+          should_continue = false
+          unless processing_rule.client_action.include? 'stop'
+            should_continue = true
+          end
+        rescue Exception => e
+          @logger.info "The user implementation has thrown exception. #{e.message}"
+          result = "empty"
+          should_publish = false
+          should_continue = false
+          raise $! if ENV["RUBY_ENV"] == "test"
+        end
+
+
+        response = Response.new(request, result)
+
+
+        if should_publish
+          @logger.info "id = #{request.id}, req = #{request.to_h[:method]}(#{request.params.join(", ")}), resp = #{response.result}"
         else
-          remote_broker.publish(response)
+          @logger.info "id = #{request.id}, req = #{request.to_h[:method]}(#{request.params.join(", ")}), resp = #{response.result} (NOT PUBLISHED)"
+        end
+
+        serialized_response = @serialization_provider.serialize(response)
+
+
+        if should_publish
+          remote_broker.publish(serialized_response)
           remote_broker.acknowledge(msg)
+        end
+
+        unless should_continue
+          remote_broker.close
         end
       end
     end

@@ -53,7 +53,7 @@ IMPLEMENTATION_MAP = {
       # ->(x, y){x.to_i + y.to_i}
     },
     'return null' => lambda { |*args| nil },
-    'throw exception' => lambda { raise StandardError },
+    'throw exception' => lambda { |*args| raise StandardError },
     'some logic' => lambda { :value },
     'increment number' => ->(x){ x + 1 }
 }
