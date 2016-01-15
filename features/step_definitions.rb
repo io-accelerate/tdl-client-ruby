@@ -45,34 +45,43 @@ end
 
 # ~~~~~ Implementations
 
-IMPLEMENTATION_MAP = {
-    'add two numbers' => lambda { |x, y|
-      # x = params[0].to_i
-      # y = params[1].to_i
-      x + y
-      # ->(x, y){x.to_i + y.to_i}
-    },
+USER_IMPLEMENTATIONS = {
+    'add two numbers' => lambda { |x, y| x + y },
     'return null' => lambda { |*args| nil },
     'throw exception' => lambda { |*args| raise StandardError },
     'some logic' => lambda { :value },
     'increment number' => ->(x){ x + 1 }
 }
 
-# Not necessary use hash.fetch(key)
-def get_lambda(name)
-  if IMPLEMENTATION_MAP.has_key?(name)
-    IMPLEMENTATION_MAP[name]
+def as_implementation(call)
+  if USER_IMPLEMENTATIONS.has_key?(call)
+    USER_IMPLEMENTATIONS[call]
   else
-    raise "Not a valid implementation reference: \"#{name}\""
+    raise "Not a valid implementation reference: \"#{call}\""
   end
 end
+
+CLIENT_ACTIONS = {
+    'publish' => TDL::PublishAction.new,
+    'stop' => TDL::StopAction.new,
+    'publish and stop' => TDL::PublishAndStopAction.new
+}
+
+def as_action(actionName)
+  if CLIENT_ACTIONS.has_key?(actionName)
+    CLIENT_ACTIONS[actionName]
+  else
+    raise "Not a valid action reference: \"#{actionName}\""
+  end
+end
+
+
 
 When(/^I go live with the following processing rules:$/) do |table|
   processing_rules = TDL::ProcessingRules.new
 
   table.hashes.each do |row|
-    implementation = IMPLEMENTATION_MAP.fetch(row[:Call])
-    processing_rules.add(row[:Method], implementation, row[:Action])
+    processing_rules.add(row[:Method], as_implementation(row[:Call]), as_action(row[:Action]))
   end
 
   @captured_io = capture_subprocess_io do
