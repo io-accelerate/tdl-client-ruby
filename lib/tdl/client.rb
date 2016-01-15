@@ -40,16 +40,14 @@ module TDL
       def initialize(processing_rules)
         @processing_rules = processing_rules
         @logger = Logging.logger[self]
+        @audit = AuditStream.new
       end
 
       def process_next_request_from(remote_broker, request)
+        @audit.start_line
+        @audit.log(request)
 
         begin
-          # DEBT method is a default method on objects
-          # o = OpenStruct.new({method: 5})
-          # o.method !! Error
-
-          # DEBT object is treated and a collection of anonymous methods and not a normal object this is not ideomatic ruby
           processing_rule = @processing_rules.get_rule_for(request)
           user_implementation = processing_rule.user_implementation
           result = user_implementation.call(*request.params)
@@ -65,25 +63,29 @@ module TDL
           end
         rescue Exception => e
           @logger.info "The user implementation has thrown exception. #{e.message}"
-          result = "empty"
+          result = 'empty'
           should_publish = false
           should_continue = false
-          raise $! if ENV["RUBY_ENV"] == "test"
+          raise $! if ENV['RUBY_ENV'] == 'test'
         end
 
 
         response = Response.new(request, result)
 
+        @audit.log(response)
 
         if should_publish
-          @logger.info "id = #{request.id}, req = #{request.method}(#{request.params.join(", ")}), resp = #{response.result}"
         else
-          @logger.info "id = #{request.id}, req = #{request.method}(#{request.params.join(", ")}), resp = #{response.result} (NOT PUBLISHED)"
+          @logger.info "id = #{request.id}, req = #{request.method}(#{request.params.join(', ')}), resp = #{response.result} (NOT PUBLISHED)"
         end
 
         if should_publish
           remote_broker.respond_to(request, with(response))
         end
+
+
+        # @audit.log(action)
+        @audit.end_line
 
         unless should_continue
           remote_broker.close
@@ -93,6 +95,35 @@ module TDL
       def with(object)
         object
       end
+    end
+
+
+    # ~~~~ Utils
+
+    class AuditStream
+
+      def initialize
+        @logger = Logging.logger[self]
+        start_line
+      end
+
+      def start_line
+        @str = ''
+      end
+
+      def log(auditable)
+        text = auditable.audit_text
+        if not text.empty? and @str.length > 0
+          @str << ', '
+        end
+
+        @str << text
+      end
+
+      def end_line
+        @logger.info @str
+      end
+
     end
 
   end

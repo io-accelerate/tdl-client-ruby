@@ -14,5 +14,9 @@ module TDL
         :id => @id,
       }
     end
+
+    def audit_text
+      "resp = #{@result}"
+    end
   end
 end

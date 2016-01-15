@@ -8,5 +8,9 @@ module TDL
       @method = request_data['method']
       @params = request_data['params']
     end
+
+    def audit_text
+      "id = #{@id}, req = #{@method}(#{@params.join(', ')})"
+    end
   end
 end
