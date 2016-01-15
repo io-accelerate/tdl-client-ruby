@@ -29,7 +29,7 @@ module TDL
         @logger.info 'Stopping client.'
         remote_broker.close
       rescue Exception => e
-        @logger.error "Problem communicating with the broker. #{e.message}"
+        @logger.error "There was a problem processing messages. #{e.message}"
         raise $! if ENV['RUBY_ENV'] == 'test'
       end
     end
