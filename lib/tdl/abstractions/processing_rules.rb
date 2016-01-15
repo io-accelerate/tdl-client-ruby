@@ -13,12 +13,10 @@ module TDL
 
 
     def get_rule_for(request)
-      method_name = request.to_h[:method]
-
-      if @rules.has_key?(method_name)
-        @rules[method_name]
+      if @rules.has_key?(request.method)
+        @rules[request.method]
       else
-        raise NameError.new("Method #{method_name} did not match any processing rule.")
+        raise NameError.new("Method #{request.method} did not match any processing rule.")
       end
     end
 

@@ -39,12 +39,10 @@ module TDL
     class ApplyProcessingRules
       def initialize(processing_rules)
         @processing_rules = processing_rules
-        @serialization_provider = JSONRPCSerializationProvider.new
         @logger = Logging.logger[self]
       end
 
-      def process_next_message_from(remote_broker, msg)
-        request = @serialization_provider.deserialize(msg.body)
+      def process_next_request_from(remote_broker, request)
 
         begin
           # DEBT method is a default method on objects
@@ -78,22 +76,22 @@ module TDL
 
 
         if should_publish
-          @logger.info "id = #{request.id}, req = #{request.to_h[:method]}(#{request.params.join(", ")}), resp = #{response.result}"
+          @logger.info "id = #{request.id}, req = #{request.method}(#{request.params.join(", ")}), resp = #{response.result}"
         else
-          @logger.info "id = #{request.id}, req = #{request.to_h[:method]}(#{request.params.join(", ")}), resp = #{response.result} (NOT PUBLISHED)"
+          @logger.info "id = #{request.id}, req = #{request.method}(#{request.params.join(", ")}), resp = #{response.result} (NOT PUBLISHED)"
         end
 
-        serialized_response = @serialization_provider.serialize(response)
-
-
         if should_publish
-          remote_broker.publish(serialized_response)
-          remote_broker.acknowledge(msg)
+          remote_broker.respond_to(request, with(response))
         end
 
         unless should_continue
           remote_broker.close
         end
+      end
+
+      def with(object)
+        object
       end
     end
 

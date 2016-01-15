@@ -7,11 +7,9 @@ module TDL
       @logger = Logging.logger[self]
     end
 
-    def deserialize(message_text)
-      json = JSON.parse(message_text)
-
-      OpenStruct.new(json)
-      # DEBT means there is no Request object needed
+    def deserialize(msg)
+      request_data = JSON.parse(msg.body)
+      Request.new(msg, request_data)
     end
 
     def serialize(response)
