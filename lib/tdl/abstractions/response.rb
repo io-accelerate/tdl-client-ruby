@@ -2,8 +2,8 @@ module TDL
   class Response
     attr_reader :result, :id
 
-    def initialize(request, result)
-      @id = request.id
+    def initialize(id, result)
+      @id = id
       @result = result
     end
 

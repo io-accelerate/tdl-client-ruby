@@ -3,6 +3,7 @@ require 'logging'
 
 require 'tdl/transport/remote_broker'
 require 'tdl/abstractions/processing_rules'
+require 'tdl/actions/stop_action'
 
 require 'tdl/serialization/json_rpc_serialization_provider'
 
@@ -29,7 +30,7 @@ module TDL
         remote_broker.close
       rescue Exception => e
         @logger.error "Problem communicating with the broker. #{e.message}"
-        raise $! if ENV["RUBY_ENV"] == "test"
+        raise $! if ENV['RUBY_ENV'] == 'test'
       end
     end
 
@@ -37,6 +38,7 @@ module TDL
     #~~~~ Queue handling policies
 
     class ApplyProcessingRules
+
       def initialize(processing_rules)
         @processing_rules = processing_rules
         @logger = Logging.logger[self]
@@ -47,83 +49,62 @@ module TDL
         @audit.start_line
         @audit.log(request)
 
+        # Obtain response from user
+        processing_rule = @processing_rules.get_rule_for(request)
+        response = get_response_for(processing_rule, request)
+        @audit.log(response ? response : Response.new('','empty'))
+
+        # Obtain action
+        client_action = response ? processing_rule.client_action : StopAction.new
+
+        # Act
+        client_action.after_response(remote_broker, request, response)
+        @audit.log(client_action)
+        @audit.end_line
+        client_action.prepare_for_next_request(remote_broker)
+      end
+
+      def get_response_for(processing_rule, request)
         begin
-          processing_rule = @processing_rules.get_rule_for(request)
           user_implementation = processing_rule.user_implementation
           result = user_implementation.call(*request.params)
 
-          should_publish = false
-          if processing_rule.client_action.include? 'publish'
-            should_publish = true
-          end
-
-          should_continue = false
-          unless processing_rule.client_action.include? 'stop'
-            should_continue = true
-          end
+          response = Response.new(request.id, result)
         rescue Exception => e
+          response = nil
           @logger.info "The user implementation has thrown exception. #{e.message}"
-          result = 'empty'
-          should_publish = false
-          should_continue = false
-          raise $! if ENV['RUBY_ENV'] == 'test'
         end
-
-
-        response = Response.new(request, result)
-
-        @audit.log(response)
-
-        if should_publish
-        else
-          @logger.info "id = #{request.id}, req = #{request.method}(#{request.params.join(', ')}), resp = #{response.result} (NOT PUBLISHED)"
-        end
-
-        if should_publish
-          remote_broker.respond_to(request, with(response))
-        end
-
-
-        # @audit.log(action)
-        @audit.end_line
-
-        unless should_continue
-          remote_broker.close
-        end
+        response
       end
 
-      def with(object)
-        object
-      end
+    end
+  end
+
+
+  # ~~~~ Utils
+
+  class AuditStream
+
+    def initialize
+      @logger = Logging.logger[self]
+      start_line
     end
 
+    def start_line
+      @str = ''
+    end
 
-    # ~~~~ Utils
-
-    class AuditStream
-
-      def initialize
-        @logger = Logging.logger[self]
-        start_line
+    def log(auditable)
+      text = auditable.audit_text
+      if not text.empty? and @str.length > 0
+        @str << ', '
       end
 
-      def start_line
-        @str = ''
-      end
+      @str << text
+    end
 
-      def log(auditable)
-        text = auditable.audit_text
-        if not text.empty? and @str.length > 0
-          @str << ', '
-        end
-
-        @str << text
-      end
-
-      def end_line
-        @logger.info @str
-      end
-
+    def end_line
+      @logger.info @str
     end
 
   end
