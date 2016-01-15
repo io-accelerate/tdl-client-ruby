@@ -5,10 +5,27 @@ Logging.logger.root.appenders = Logging.appenders.stdout
 Logging.logger.root.level = :info
 
 
-client = TDL::Client.new('localhost', 21613, 'test')
+def run_client
+  client = TDL::Client.new('localhost', 61613, 'julian')
+  include TDL::ClientActions
+  rules = TDL::ProcessingRules.new
+  rules.on('display_description').call(method(:display)).then(publish)
+  rules.on('display_required_methods').call(method(:display)).then(publish)
+  rules.on('increment').call(method(:increment)).then(publish_and_stop)
 
-client.go_live_with { |params|
-  x = params[0].to_i
-  y = params[1].to_i
-  x + y
-}
+  # puts processing_rules.to_yaml
+
+  client.go_live_with(rules)
+end
+
+def display(str)
+  puts str
+  'OK'
+end
+
+def increment(x)
+  x + 1
+end
+
+
+run_client

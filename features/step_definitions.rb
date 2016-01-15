@@ -81,7 +81,7 @@ When(/^I go live with the following processing rules:$/) do |table|
   processing_rules = TDL::ProcessingRules.new
 
   table.hashes.each do |row|
-    processing_rules.add(row[:Method], as_implementation(row[:Call]), as_action(row[:Action]))
+    processing_rules.on(row[:Method]).call(as_implementation(row[:Call])).then(as_action(row[:Action]))
   end
 
   @captured_io = capture_subprocess_io do

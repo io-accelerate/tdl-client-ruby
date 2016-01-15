@@ -1,3 +1,4 @@
+require 'json'
 require 'tdl/abstractions/request'
 require 'tdl/abstractions/response'
 
