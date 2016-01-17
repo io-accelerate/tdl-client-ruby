@@ -1,6 +1,5 @@
 require 'json'
 require 'tdl/abstractions/request'
-require 'tdl/abstractions/response'
 
 module TDL
   class JSONRPCSerializationProvider

@@ -2,7 +2,7 @@ require 'stomp'
 require 'logging'
 
 require 'tdl/transport/remote_broker'
-require 'tdl/abstractions/processing_rules'
+require 'tdl/processing_rules'
 require 'tdl/actions/stop_action'
 
 require 'tdl/serialization/json_rpc_serialization_provider'
@@ -52,7 +52,7 @@ module TDL
         # Obtain response from user
         processing_rule = @processing_rules.get_rule_for(request)
         response = get_response_for(processing_rule, request)
-        @audit.log(response ? response : Response.new('','empty'))
+        @audit.log(response ? response : ValidResponse.new('', 'empty'))
 
         # Obtain action
         client_action = response ? processing_rule.client_action : StopAction.new
@@ -69,7 +69,7 @@ module TDL
           user_implementation = processing_rule.user_implementation
           result = user_implementation.call(*request.params)
 
-          response = Response.new(request.id, result)
+          response = ValidResponse.new(request.id, result)
         rescue Exception => e
           response = nil
           @logger.info "The user implementation has thrown exception. #{e.message}"

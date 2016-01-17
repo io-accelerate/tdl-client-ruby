@@ -1,4 +1,6 @@
 require 'tdl/abstractions/processing_rule'
+require 'tdl/abstractions/response/fatal_error_response'
+require 'tdl/abstractions/response/valid_response'
 require 'tdl/actions/client_actions'
 
 module TDL
@@ -6,6 +8,7 @@ module TDL
 
     def initialize
       @rules = Hash.new
+      @logger = Logging.logger[self]
     end
 
     # ~~~~ Builders
@@ -17,7 +20,6 @@ module TDL
     def on(method_name)
       ProcessingRuleBuilder.new(self, method_name)
     end
-
 
     class ProcessingRuleBuilder
 
@@ -37,7 +39,6 @@ module TDL
     end
 
 
-
     # ~~~~ Accessors
 
     def get_rule_for(request)
@@ -45,6 +46,16 @@ module TDL
         @rules[request.method]
       else
         raise NameError.new("Method #{request.method} did not match any processing rule.")
+      end
+    end
+
+    def get_response_for(request)
+      if @rules.has_key?(request.method)
+        @rules[request.method]
+      else
+        message = "Method #{request.method} did not match any processing rule."
+        @logger.warn(message)
+        return FatalErrorResponse.new(message)
       end
     end
 

@@ -1,5 +1,5 @@
 module TDL
-  class Response
+  class ValidResponse
     attr_reader :result, :id
 
     def initialize(id, result)
