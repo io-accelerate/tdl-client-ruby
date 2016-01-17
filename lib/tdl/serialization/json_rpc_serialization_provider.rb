@@ -1,5 +1,6 @@
 require 'json'
 require 'tdl/abstractions/request'
+require 'tdl/serialization/deserialization_exception'
 
 module TDL
   class JSONRPCSerializationProvider
@@ -8,8 +9,12 @@ module TDL
     end
 
     def deserialize(msg)
-      request_data = JSON.parse(msg.body)
-      Request.new(msg, request_data)
+      begin
+        request_data = JSON.parse(msg.body)
+        Request.new(msg, request_data)
+      rescue Exception => e
+        raise DeserializationException,'Invalid message format', e.backtrace
+      end
     end
 
     def serialize(response)

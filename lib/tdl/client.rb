@@ -30,7 +30,7 @@ module TDL
         remote_broker.close
       rescue Exception => e
         @logger.error "There was a problem processing messages. #{e.message}"
-        raise $! if ENV['RUBY_ENV'] == 'test'
+        @logger.error e.backtrace.join("\n")
       end
     end
 

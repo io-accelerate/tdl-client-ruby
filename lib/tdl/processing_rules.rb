@@ -58,6 +58,7 @@ module TDL
       rescue Exception => e
         message = 'user implementation raised exception'
         @logger.warn("#{message}, #{e.message}")
+        @logger.warn e.backtrace.join("\n")
         return FatalErrorResponse.new(message)
       end
     end

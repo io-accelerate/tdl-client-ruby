@@ -1,0 +1,3 @@
+
+class DeserializationException < StandardError
+end

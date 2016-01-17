@@ -33,7 +33,7 @@ Given(/^I start with a clean broker$/) do
 end
 
 Given(/^the broker is not available$/) do
-  @client_without_broker = TDL::Client.new("#{HOSTNAME}1", STOMP_PORT, 'broker')
+  @client = TDL::Client.new("#{HOSTNAME}X", STOMP_PORT, 'broker')
 end
 
 Given(/^I receive the following requests:$/) do |table|
