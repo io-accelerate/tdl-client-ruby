@@ -41,20 +41,23 @@ module TDL
 
     # ~~~~ Accessors
 
-    def get_rule_for(request)
-      if @rules.has_key?(request.method)
-        @rules[request.method]
-      else
-        raise NameError.new("Method #{request.method} did not match any processing rule.")
-      end
-    end
-
     def get_response_for(request)
       if @rules.has_key?(request.method)
-        @rules[request.method]
+        processing_rule = @rules[request.method]
       else
-        message = "Method #{request.method} did not match any processing rule."
+        message = "method \"#{request.method}\" did not match any processing rule"
         @logger.warn(message)
+        return FatalErrorResponse.new(message)
+      end
+
+      begin
+        user_implementation = processing_rule.user_implementation
+        result = user_implementation.call(*request.params)
+
+        return ValidResponse.new(request.id, result, processing_rule.client_action)
+      rescue Exception => e
+        message = 'user implementation raised exception'
+        @logger.warn("#{message}, #{e.message}")
         return FatalErrorResponse.new(message)
       end
     end

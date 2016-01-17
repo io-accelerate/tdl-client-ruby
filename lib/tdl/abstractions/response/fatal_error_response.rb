@@ -1,3 +1,5 @@
+require 'tdl/actions/stop_action'
+
 module TDL
   class FatalErrorResponse
 
@@ -5,8 +7,12 @@ module TDL
       @message = message
     end
 
+    def client_action
+      StopAction.new
+    end
+
     def audit_text
-      "error = #{message}"
+      "error = #{@message}"
     end
   end
 end

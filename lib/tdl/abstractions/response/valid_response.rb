@@ -1,10 +1,11 @@
 module TDL
   class ValidResponse
-    attr_reader :result, :id
+    attr_reader :result, :id, :client_action
 
-    def initialize(id, result)
+    def initialize(id, result, client_action)
       @id = id
       @result = result
+      @client_action = client_action
     end
 
     def to_h

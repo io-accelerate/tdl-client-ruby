@@ -50,31 +50,17 @@ module TDL
         @audit.log(request)
 
         # Obtain response from user
-        processing_rule = @processing_rules.get_rule_for(request)
-        response = get_response_for(processing_rule, request)
-        @audit.log(response ? response : ValidResponse.new('', 'empty'))
+        response = @processing_rules.get_response_for(request)
+        @audit.log(response)
 
         # Obtain action
-        client_action = response ? processing_rule.client_action : StopAction.new
+        client_action = response.client_action
 
         # Act
         client_action.after_response(remote_broker, request, response)
         @audit.log(client_action)
         @audit.end_line
         client_action.prepare_for_next_request(remote_broker)
-      end
-
-      def get_response_for(processing_rule, request)
-        begin
-          user_implementation = processing_rule.user_implementation
-          result = user_implementation.call(*request.params)
-
-          response = ValidResponse.new(request.id, result)
-        rescue Exception => e
-          response = nil
-          @logger.info "The user implementation has thrown exception. #{e.message}"
-        end
-        response
       end
 
     end
