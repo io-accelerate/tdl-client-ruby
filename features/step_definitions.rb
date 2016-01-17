@@ -61,10 +61,11 @@ def as_implementation(call)
   end
 end
 
+include TDL::ClientActions
 CLIENT_ACTIONS = {
-    'publish' => TDL::PublishAction.new,
-    'stop' => TDL::StopAction.new,
-    'publish and stop' => TDL::PublishAndStopAction.new
+    'publish' => publish,
+    'stop' => stop,
+    'publish and stop' => publish_and_stop
 }
 
 def as_action(actionName)

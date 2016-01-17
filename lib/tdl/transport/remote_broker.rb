@@ -19,10 +19,6 @@ module TDL
       @stomp_client.acknowledge(request.original_message)
     end
 
-    def publish(response)
-      @stomp_client.publish("/queue/#{@username}.resp", response)
-    end
-
     def join(limit = nil)
       @stomp_client.join(limit)
     end
