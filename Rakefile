@@ -37,12 +37,12 @@ end
 
 #~~~~~~~~ Deploy
 
-require 'tdl/version'
+require 'tdl/previous_version'
 
 task :build do
   system 'gem build tdl-client-ruby.gemspec'
 end
 
 task :release => :build do
-  system "gem push tdl-client-ruby-*.gem"
+  system 'gem push tdl-client-ruby-*.gem'
 end
