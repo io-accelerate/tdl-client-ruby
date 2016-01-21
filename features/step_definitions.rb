@@ -29,11 +29,11 @@ Given(/^I start with a clean broker$/) do
   @response_queue = BROKER.add_queue("#{USERNAME}.resp")
   @response_queue.purge
 
-  @client = TDL::Client.new(HOSTNAME, STOMP_PORT, USERNAME)
+  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, username: USERNAME)
 end
 
 Given(/^the broker is not available$/) do
-  @client = TDL::Client.new("#{HOSTNAME}X", STOMP_PORT, 'broker')
+  @client = TDL::Client.new(hostname: "#{HOSTNAME}X", port: STOMP_PORT, username: 'broker')
 end
 
 Given(/^I receive the following requests:$/) do |table|
