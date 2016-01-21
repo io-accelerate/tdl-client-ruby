@@ -1,3 +1,3 @@
 module TDL
-  PREVIOUS_VERSION = '0.5.7'
+  PREVIOUS_VERSION = '0.6.0'
 end
