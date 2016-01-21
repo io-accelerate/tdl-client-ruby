@@ -11,7 +11,7 @@ module TDL
 
   class Client
 
-    def initialize(hostname, port, username)
+    def initialize(hostname:, port: 61613, username:)
       @hostname = hostname
       @port = port
       @username = username
