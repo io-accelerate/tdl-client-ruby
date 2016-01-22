@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_FOLDER="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VERSION_FILE="${SCRIPT_FOLDER}/lib/tdl/version.rb"
+VERSION_FILE="${SCRIPT_FOLDER}/lib/tdl/previous_version.rb"
 TMP_VERSION_FILE="${SCRIPT_FOLDER}/out/versions.txt"
 
 

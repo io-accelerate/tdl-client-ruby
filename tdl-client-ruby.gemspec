@@ -21,7 +21,7 @@ major_minor_version = `git --git-dir #{spec_folder}/.git describe --all | cut -d
 
 # Compute next version
 previous_version = ComparableVersion.new(TDL::PREVIOUS_VERSION)
-new_spec_version = ComparableVersion.new(major_minor_version+'.0')
+new_spec_version = ComparableVersion.new(major_minor_version+'.1')
 if new_spec_version > previous_version
   current_version = new_spec_version
 else
