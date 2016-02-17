@@ -50,7 +50,8 @@ USER_IMPLEMENTATIONS = {
     'return null' => lambda { |*args| nil },
     'throw exception' => lambda { |*args| raise StandardError },
     'some logic' => lambda { :value },
-    'increment number' => ->(x){ x + 1 }
+    'increment number' => ->(x){ x + 1 },
+    'echo the request' => ->(x){x}
 }
 
 def as_implementation(call)

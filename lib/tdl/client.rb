@@ -29,6 +29,7 @@ module TDL
         @logger.info 'Stopping client.'
         remote_broker.close
       rescue Exception => e
+        # raise e if ENV['TDL_ENV'] == 'test'
         @logger.error "There was a problem processing messages. #{e.message}"
         @logger.error e.backtrace.join("\n")
       end

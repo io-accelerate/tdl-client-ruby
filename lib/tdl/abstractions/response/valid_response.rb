@@ -17,7 +17,17 @@ module TDL
     end
 
     def audit_text
-      "resp = #{@result}"
+      # DEBT duplicated in request
+      if @result.respond_to?(:split)
+        first, *last = @result.split("\n")
+        if last
+          "resp = \"#{first} .. ( #{last.size} more line#{ 's' if last.size != 1 } )\""
+        else
+          "\"#{first}\""
+        end
+      else
+        "resp = #{@result}"
+      end
     end
   end
 end

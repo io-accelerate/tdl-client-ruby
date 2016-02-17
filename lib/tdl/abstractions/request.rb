@@ -10,8 +10,19 @@ module TDL
     end
 
     def audit_text
-      # DEBT Quotes parameters that are not strings. 
-      "id = #{@id}, req = #{@method}(#{@params.map{|p| "\"#{p}\""}.join(', ')})"
+      # DEBT Quotes parameters that are not strings.
+      "id = #{@id}, req = #{@method}(#{@params.map{ |param|
+        if param.respond_to?(:split)
+          first, *last = param.split("\n")
+          if last
+            "\"#{first} .. ( #{last.size} more line#{ 's' if last.size != 1 } )\""
+          else
+            "\"#{first}\""
+          end
+        else
+          param
+        end
+      }.join(', ')})"
     end
   end
 end

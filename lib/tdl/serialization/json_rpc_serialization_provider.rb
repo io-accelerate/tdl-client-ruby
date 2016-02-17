@@ -10,9 +10,10 @@ module TDL
 
     def deserialize(msg)
       begin
-        request_data = JSON.parse(msg.body)
+        request_data = JSON.parse(msg.body.gsub("\n", '\n'))
         Request.new(msg, request_data)
       rescue Exception => e
+        raise e if ENV['TDL_ENV'] == 'test'
         raise DeserializationException,'Invalid message format', e.backtrace
       end
     end
