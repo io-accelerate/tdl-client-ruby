@@ -45,7 +45,7 @@ module TDL
       if @rules.has_key?(request.method)
         processing_rule = @rules[request.method]
       else
-        message = "method \"#{request.method}\" did not match any processing rule"
+        message = "\"method '#{request.method}' did not match any processing rule\""
         @logger.warn(message)
         return FatalErrorResponse.new(message)
       end

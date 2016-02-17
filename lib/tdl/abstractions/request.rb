@@ -10,7 +10,8 @@ module TDL
     end
 
     def audit_text
-      "id = #{@id}, req = #{@method}(#{@params.join(', ')})"
+      # DEBT Quotes parameters that are not strings. 
+      "id = #{@id}, req = #{@method}(#{@params.map{|p| "\"#{p}\""}.join(', ')})"
     end
   end
 end
