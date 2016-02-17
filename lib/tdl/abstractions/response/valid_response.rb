@@ -1,3 +1,5 @@
+require 'tdl/util'
+
 module TDL
   class ValidResponse
     attr_reader :result, :id, :client_action
@@ -17,14 +19,8 @@ module TDL
     end
 
     def audit_text
-      # DEBT duplicated in request
       if @result.respond_to?(:split)
-        first, *last = @result.split("\n")
-        if last
-          "resp = \"#{first} .. ( #{last.size} more line#{ 's' if last.size != 1 } )\""
-        else
-          "\"#{first}\""
-        end
+        "resp = #{TDL::Util.compress_text(@result)}"
       else
         "resp = #{@result}"
       end

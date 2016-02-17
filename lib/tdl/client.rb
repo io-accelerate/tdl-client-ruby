@@ -6,7 +6,6 @@ require 'tdl/processing_rules'
 require 'tdl/actions/stop_action'
 
 require 'tdl/serialization/json_rpc_serialization_provider'
-
 module TDL
 
   class Client
