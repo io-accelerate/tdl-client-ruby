@@ -12,13 +12,8 @@ module TDL
     end
 
     def audit_text
-      # DEBT Quotes parameters that are not strings.
       "id = #{id}, req = #{method}(#{params.map{ |param|
-        if param.respond_to?(:split)
-          TDL::Util.compress_text(param)
-        else
-          param
-        end
+        TDL::Util.compress_data(param)
       }.join(', ')})"
     end
   end

@@ -19,11 +19,7 @@ module TDL
     end
 
     def audit_text
-      if @result.respond_to?(:split)
-        "resp = #{TDL::Util.compress_text(@result)}"
-      else
-        "resp = #{@result}"
-      end
+      "resp = #{TDL::Util.compress_data(@result)}"
     end
   end
 end
