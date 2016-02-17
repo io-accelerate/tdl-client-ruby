@@ -1,3 +1,5 @@
+require 'tdl/util'
+
 module TDL
   class ValidResponse
     attr_reader :result, :id, :client_action
@@ -17,7 +19,7 @@ module TDL
     end
 
     def audit_text
-      "resp = #{@result}"
+      "resp = #{TDL::Util.compress_data(@result)}"
     end
   end
 end

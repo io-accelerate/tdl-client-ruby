@@ -45,7 +45,7 @@ module TDL
       if @rules.has_key?(request.method)
         processing_rule = @rules[request.method]
       else
-        message = "method \"#{request.method}\" did not match any processing rule"
+        message = "\"method '#{request.method}' did not match any processing rule\""
         @logger.warn(message)
         return FatalErrorResponse.new(message)
       end
@@ -56,7 +56,7 @@ module TDL
 
         return ValidResponse.new(request.id, result, processing_rule.client_action)
       rescue Exception => e
-        message = 'user implementation raised exception'
+        message = '"user implementation raised exception"'
         @logger.warn("#{message}, #{e.message}")
         @logger.warn e.backtrace.join("\n")
         return FatalErrorResponse.new(message)
