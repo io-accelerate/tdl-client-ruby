@@ -4,14 +4,14 @@ module TDL
 
     def initialize(original_message, request_data)
       @original_message = original_message
-      @id = request_data['id']
-      @method = request_data['method']
-      @params = request_data['params']
+      @id = request_data.fetch('id')
+      @method = request_data.fetch('method')
+      @params = request_data.fetch('params')
     end
 
     def audit_text
       # DEBT Quotes parameters that are not strings.
-      "id = #{@id}, req = #{@method}(#{@params.map{ |param|
+      "id = #{id}, req = #{method}(#{params.map{ |param|
         if param.respond_to?(:split)
           first, *last = param.split("\n")
           if last
