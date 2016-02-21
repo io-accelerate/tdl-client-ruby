@@ -3,9 +3,12 @@ module TDL
     def self.compress_text(text)
       # DEBT compress text should not add quotes
       top_line, *remaing_content = text.split("\n")
-      if remaing_content
-        lines_remaining = remaing_content.size
-        "\"#{top_line} .. ( #{lines_remaining} more line#{ 's' if lines_remaining != 1 } )\""
+      lines_remaining = remaing_content.size
+
+      if lines_remaining > 1
+        "\"#{top_line} .. ( #{lines_remaining} more lines )\""
+      elsif lines_remaining == 1
+        "\"#{top_line} .. ( 1 more line )\""
       else
         "\"#{top_line}\""
       end
