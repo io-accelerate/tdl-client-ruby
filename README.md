@@ -5,9 +5,18 @@
 
 # tdl-client-ruby
 
-Install Homebrew and Ruby 2.2.2
+```
+# Install RVM
+curl -sSL https://get.rvm.io | bash -s stable
+echo 'source /Users/julianghionoiu/.rvm/scripts/rvm' >> .bash_profile
 
-https://gorails.com/setup/osx/10.11-el-capitan
+# Install ruby
+rvm install ruby-2.2.2
+rvm use ruby-2.2.2
+
+# Install bundler
+gem install bundler
+```
 
 # Installing
 
