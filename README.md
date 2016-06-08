@@ -4,7 +4,9 @@
 [![Coverage Status](https://coveralls.io/repos/julianghionoiu/tdl-client-ruby/badge.svg?branch=master&service=github)](https://coveralls.io/github/julianghionoiu/tdl-client-ruby?branch=master)
 
 # tdl-client-ruby
-tdl-client-ruby
+
+Install Homebrew and Ruby 2.2.2
+https://gorails.com/setup/osx/10.11-el-capitan
 
 # Installing
 
