@@ -20,7 +20,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="ansi (v1.5.0, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.2.2, rbenv: 2.2.2) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.10.6, rbenv: 2.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.12.5, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="coveralls (v0.8.2, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="cucumber (v2.0.2, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="cucumber-core (v1.2.0, rbenv: 2.2.2) [gem]" level="application" />
@@ -40,7 +40,6 @@
     <orderEntry type="library" scope="PROVIDED" name="multi_json (v1.11.2, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="multi_test (v0.1.2, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="netrc (v0.10.3, rbenv: 2.2.2) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rake (v10.4.2, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rest-client (v1.8.0, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.7.5, rbenv: 2.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="simplecov (v0.10.0, rbenv: 2.2.2) [gem]" level="application" />
