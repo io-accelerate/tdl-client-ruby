@@ -18,22 +18,22 @@ BROKER.connect
 
 # Broker client definition
 STOMP_PORT = 21613
-USERNAME = 'test'
+UNIQUE_ID = 'test@example.com'
 
 # ~~~~~ Setup
 
 Given(/^I start with a clean broker$/) do
-  @request_queue = BROKER.add_queue("#{USERNAME}.req")
+  @request_queue = BROKER.add_queue("#{UNIQUE_ID}.req")
   @request_queue.purge
 
-  @response_queue = BROKER.add_queue("#{USERNAME}.resp")
+  @response_queue = BROKER.add_queue("#{UNIQUE_ID}.resp")
   @response_queue.purge
 
-  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, username: USERNAME)
+  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, unique_id: UNIQUE_ID)
 end
 
 Given(/^the broker is not available$/) do
-  @client = TDL::Client.new(hostname: "#{HOSTNAME}X", port: STOMP_PORT, username: 'broker')
+  @client = TDL::Client.new(hostname: "#{HOSTNAME}X", port: STOMP_PORT, unique_id: 'broker')
 end
 
 Given(/^I receive the following requests:$/) do |table|

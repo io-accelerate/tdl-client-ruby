@@ -10,17 +10,17 @@ module TDL
 
   class Client
 
-    def initialize(hostname:, port: 61613, username:)
+    def initialize(hostname:, port: 61613, unique_id:)
       @hostname = hostname
       @port = port
-      @username = username
+      @unique_id = unique_id
       @logger = Logging.logger[self]
     end
 
     def go_live_with(processing_rules)
       begin
         @logger.info 'Starting client.'
-        remote_broker = RemoteBroker.new(@hostname, @port, @username)
+        remote_broker = RemoteBroker.new(@hostname, @port, @unique_id)
         remote_broker.subscribe(ApplyProcessingRules.new(processing_rules))
 
         #DEBT: We should have no timeout here. We could put a special message in the queue
