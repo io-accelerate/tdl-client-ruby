@@ -2,7 +2,7 @@ require 'tdl/util'
 
 module TDL
   class ValidResponse
-    attr_reader :result, :id, :client_action
+    attr_reader :id, :result, :client_action
 
     def initialize(id, result, client_action)
       @id = id

@@ -7,7 +7,7 @@ module TDL
     end
 
     def subscribe(handling_strategy)
-      @stomp_client.subscribe("/queue/#{@unique_id}.req", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
+      @stomp_client.subscribe("/queue/#{@unique_id}.req", {:ack => 'client-individual', 'activemq.prefetchSize' => 1}) do |msg|
         request = @serialization_provider.deserialize(msg)
         handling_strategy.process_next_request_from(self, request)
       end
