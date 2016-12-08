@@ -19,7 +19,7 @@ module TDL
       @stomp_client.acknowledge(request.original_message)
     end
 
-    def join(limit = nil)
+    def join(limit)
       @stomp_client.join(limit)
     end
 

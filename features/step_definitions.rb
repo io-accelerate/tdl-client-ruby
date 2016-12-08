@@ -29,7 +29,7 @@ Given(/^I start with a clean broker$/) do
   @response_queue = BROKER.add_queue("#{UNIQUE_ID}.resp")
   @response_queue.purge
 
-  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, unique_id: UNIQUE_ID)
+  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, unique_id: UNIQUE_ID, time_to_wait_for_requests: 0.5)
 end
 
 Given(/^the broker is not available$/) do
