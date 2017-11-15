@@ -3,7 +3,7 @@ require 'logging'
 
 Logging.logger.root.appenders = Logging.appenders.stdout
 
-CORRECT_SOLUTION = lambda { |params|
+CORRECT_SOLUTION = lambda {|params|
   x = params[0].to_i
   y = params[1].to_i
   x + y
@@ -18,22 +18,40 @@ BROKER.connect
 
 # Broker client definition
 STOMP_PORT = 21613
-UNIQUE_ID = 'test@example.com'
 
 # ~~~~~ Setup
 
-Given(/^I start with a clean broker$/) do
-  @request_queue = BROKER.add_queue("#{UNIQUE_ID}.req")
+Given(/^I start with a clean broker and a client for user "([^\"]*)"$/) do |username|
+  unique_id = username
+  @request_queue = BROKER.add_queue("#{unique_id}.req")
   @request_queue.purge
 
-  @response_queue = BROKER.add_queue("#{UNIQUE_ID}.resp")
+  @response_queue = BROKER.add_queue("#{unique_id}.resp")
   @response_queue.purge
 
-  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, unique_id: UNIQUE_ID, time_to_wait_for_requests: 1)
+  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, unique_id: unique_id)
 end
 
 Given(/^the broker is not available$/) do
   @client = TDL::Client.new(hostname: '111', port: STOMP_PORT, unique_id: 'broker')
+end
+
+
+Then(/^the time to wait for requests is (\d+)ms$/) do |expected_timeout|
+  assert_equal expected_timeout.to_i, @client.get_request_timeout_millis,
+               'The client request timeout has a different value.'
+end
+
+
+Then(/^the request queue is "([^"]*)"$/) do |expected_value|
+  assert_equal expected_value, @request_queue.get_name,
+               'Request queue has a different value.'
+end
+
+
+Then(/^the response queue is "([^"]*)"$/) do |expected_value|
+  assert_equal expected_value, @response_queue.get_name,
+               'Request queue has a different value.'
 end
 
 Given(/^I receive the following requests:$/) do |table|
@@ -46,12 +64,13 @@ end
 # ~~~~~ Implementations
 
 USER_IMPLEMENTATIONS = {
-    'add two numbers' => lambda { |x, y| x + y },
-    'return null' => lambda { |*args| nil },
-    'throw exception' => lambda { |*args| raise StandardError },
-    'some logic' => lambda { :value },
-    'increment number' => ->(x){ x + 1 },
-    'echo the request' => ->(x){x}
+    'add two numbers' => lambda {|x, y| x + y},
+    'return null' => lambda {|*args| nil},
+    'throw exception' => lambda {|*args| raise StandardError},
+    'some logic' => lambda {:value},
+    'increment number' => ->(x) {x + 1},
+    'echo the request' => ->(x) {x},
+    'work for 500ms' => ->(x) {sleep(0.01); 'OK'},
 }
 
 def as_implementation(call)
@@ -78,7 +97,6 @@ def as_action(actionName)
 end
 
 
-
 When(/^I go live with the following processing rules:$/) do |table|
   processing_rules = TDL::ProcessingRules.new
 
@@ -103,7 +121,7 @@ Then(/^the client should consume first request$/) do
 end
 
 Then(/^the client should publish the following responses:$/) do |table|
-  assert_equal table.hashes.map { |row| row[:payload] }, @response_queue.get_message_contents, 'The responses are not correct'
+  assert_equal table.hashes.map {|row| row[:payload]}, @response_queue.get_message_contents, 'The responses are not correct'
 end
 
 Then(/^the client should display to console:$/) do |table|
@@ -113,7 +131,7 @@ Then(/^the client should display to console:$/) do |table|
 end
 
 Then(/^the client should not display to console:$/) do |table|
-  table.raw.flatten.each { |row|
+  table.raw.flatten.each {|row|
     refute_includes @captured_io.join(''), row
   }
 end

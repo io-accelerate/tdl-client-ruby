@@ -11,12 +11,16 @@ module TDL
 
   class Client
 
-    def initialize(hostname:, port: 61613, unique_id:, time_to_wait_for_requests: 3)
+    def initialize(hostname:, port: 61613, unique_id:, request_timeout_millis: 500)
       @hostname = hostname
       @port = port
       @unique_id = unique_id
-      @time_to_wait_for_requests = time_to_wait_for_requests
+      @request_timeout_millis = request_timeout_millis
       @logger = Logging.logger[self]
+    end
+
+    def get_request_timeout_millis
+      @request_timeout_millis
     end
 
     def go_live_with(processing_rules)
@@ -27,7 +31,7 @@ module TDL
 
         #DEBT: We should have no timeout here. We could put a special message in the queue
         @logger.info 'Waiting for requests.'
-        remote_broker.join(@time_to_wait_for_requests)
+        remote_broker.join(@request_timeout_millis)
         @logger.info 'Stopping client.'
         remote_broker.close
       rescue Exception => e
@@ -67,6 +71,8 @@ module TDL
       end
 
     end
+
+
   end
 
 

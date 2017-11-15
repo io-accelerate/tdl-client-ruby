@@ -2,8 +2,13 @@
 class RemoteJmxQueue
 
   def initialize(jolokia_session, broker_name, queue_name)
+    @name = queue_name
     @jolokia_session = jolokia_session
     @queue_bean = "org.apache.activemq:type=Broker,brokerName=#{broker_name},destinationType=Queue,destinationName=#{queue_name}"
+  end
+
+  def get_name
+    @name
   end
 
   def send_text_message(request)

@@ -19,8 +19,8 @@ module TDL
       @stomp_client.acknowledge(request.original_message)
     end
 
-    def join(limit)
-      @stomp_client.join(limit)
+    def join(limit_millis)
+      @stomp_client.join(limit_millis / 1000.00)
     end
 
     def close
