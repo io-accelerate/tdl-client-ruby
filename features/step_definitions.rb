@@ -33,14 +33,14 @@ Given(/^I start with a clean broker$/) do
 end
 
 Given(/^the broker is not available$/) do
-  @client = TDL::Client.new(hostname: "#{HOSTNAME}X", port: STOMP_PORT, unique_id: 'broker')
+  @client = TDL::Client.new(hostname: '111', port: STOMP_PORT, unique_id: 'broker')
 end
 
 Given(/^I receive the following requests:$/) do |table|
-  table.raw.each { |request|
-    @request_queue.send_text_message(request.first)
-  }
-  @request_count = table.raw.count
+  table.hashes.each do |row|
+    @request_queue.send_text_message(row[:payload])
+  end
+  @request_count = table.hashes.count
 end
 
 # ~~~~~ Implementations
@@ -83,7 +83,7 @@ When(/^I go live with the following processing rules:$/) do |table|
   processing_rules = TDL::ProcessingRules.new
 
   table.hashes.each do |row|
-    processing_rules.on(row[:Method]).call(as_implementation(row[:Call])).then(as_action(row[:Action]))
+    processing_rules.on(row[:method]).call(as_implementation(row[:call])).then(as_action(row[:action]))
   end
 
   @captured_io = capture_subprocess_io do
@@ -103,13 +103,13 @@ Then(/^the client should consume first request$/) do
 end
 
 Then(/^the client should publish the following responses:$/) do |table|
-  assert_equal table.raw.flatten, @response_queue.get_message_contents, 'The responses are not correct'
+  assert_equal table.hashes.map { |row| row[:payload] }, @response_queue.get_message_contents, 'The responses are not correct'
 end
 
 Then(/^the client should display to console:$/) do |table|
-  table.raw.flatten.each { |row|
-    assert_includes @captured_io.join(''), row
-  }
+  table.hashes.each do |row|
+    assert_includes @captured_io.join(''), row[:output]
+  end
 end
 
 Then(/^the client should not display to console:$/) do |table|

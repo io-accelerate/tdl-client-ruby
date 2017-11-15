@@ -3,3 +3,4 @@ pkg
 Gemfile.lock
 out
 coverage
+.DS_Store
