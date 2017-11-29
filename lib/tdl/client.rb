@@ -57,10 +57,13 @@ module TDL
         @logger = Logging.logger[self]
         @audit = AuditStream.new
         @request_timeout_millis = request_timeout_millis
+        @thread = nil
       end
 
       def process_next_request_from(remote_broker, request)
-        @thread.terminate unless @thread.nil?
+        if @thread != nil
+          @thread.terminate
+        end
         @thread = nil
 
         @audit.start_line
@@ -79,7 +82,7 @@ module TDL
         @audit.end_line
         client_action.prepare_for_next_request(remote_broker)
 
-        if @thread.nil? && !remote_broker.closed?
+        if @thread.nil?
           @thread = Thread.new do
             sleep(@request_timeout_millis / 1000.00)
             remote_broker.close
