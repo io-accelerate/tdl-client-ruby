@@ -16,17 +16,12 @@ module TDL
     end
 
     def respond_to(request, response)
-      @time_taken_2 = Time.now.to_f
-      puts "time = #{@time_taken_2 - @time_taken_1}"
-      kill_thread
       serialized_response = @serialization_provider.serialize(response)
       @stomp_client.publish("/queue/#{@unique_id}.resp", serialized_response)
       @stomp_client.acknowledge(request.original_message)
     end
 
     def join
-      start_timer
-      @time_taken_1 = Time.now.to_f
       @stomp_client.join
     end
 
@@ -34,21 +29,8 @@ module TDL
       @stomp_client.close
     end
 
-    def kill_thread
-      @thread.terminate unless @thread.nil?
-      @thread = nil
-      puts "thread killed"
-    end
-
-    def start_timer
-      puts "started thread"
-      # if @thread.nil?
-      #   @thread = Thread.new do
-      #     sleep(@timeout_millis / 1000.00)
-      #     close
-      #   end
-      #   puts "created new thread"
-      # end
+    def closed?
+      @stomp_client.closed?
     end
   end
 end

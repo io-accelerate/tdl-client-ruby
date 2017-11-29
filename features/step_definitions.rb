@@ -118,9 +118,9 @@ When(/^I go live with the following processing rules:$/) do |table|
     processing_rules.on(row[:method]).call(as_implementation(row[:call])).then(as_action(row[:action]))
   end
 
-  # @captured_io = capture_subprocess_io do
+  @captured_io = capture_subprocess_io do
     @client.go_live_with(processing_rules)
-  # end
+  end
 end
 
 
