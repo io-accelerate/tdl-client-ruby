@@ -31,9 +31,8 @@ module TDL
 
         #DEBT: We should have no timeout here. We could put a special message in the queue
         @logger.info 'Waiting for requests.'
-        remote_broker.join(@request_timeout_millis)
-        @logger.info 'Stopping client.'
-        remote_broker.close
+        remote_broker.join
+
       rescue Exception => e
         # raise e if ENV['TDL_ENV'] == 'test'
         @logger.error "There was a problem processing messages. #{e.message}"

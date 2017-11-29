@@ -70,7 +70,7 @@ USER_IMPLEMENTATIONS = {
     'some logic' => lambda {:value},
     'increment number' => ->(x) {x + 1},
     'echo the request' => ->(x) {x},
-    'work for 500ms' => ->(x) {sleep(0.01); 'OK'},
+    'work for 500ms' => ->(x) {sleep(0.5); 'OK'},
 }
 
 def as_implementation(call)
