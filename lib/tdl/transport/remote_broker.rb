@@ -1,7 +1,8 @@
 
 module TDL
   class RemoteBroker
-    def initialize(hostname, port, unique_id)
+    def initialize(hostname, port, unique_id, timeout_millis)
+      @timeout_millis = timeout_millis
       @stomp_client = Stomp::Client.new('', '', hostname, port)
       @unique_id = unique_id
       @serialization_provider = JSONRPCSerializationProvider.new
@@ -38,7 +39,7 @@ module TDL
 
     def start_timer
       @thread = Thread.new do
-        sleep(0.51)
+        sleep(@timeout_millis / 1000.00)
         close
       end
     end
