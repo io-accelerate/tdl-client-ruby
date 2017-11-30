@@ -1,17 +1,21 @@
+require_relative '../thread_timer'
 
 module TDL
   class RemoteBroker
-    def initialize(hostname, port, unique_id, timeout_millis)
-      @timeout_millis = timeout_millis
+    def initialize(hostname, port, unique_id, request_timeout_millis)
       @stomp_client = Stomp::Client.new('', '', hostname, port)
       @unique_id = unique_id
       @serialization_provider = JSONRPCSerializationProvider.new
+      @timer_thread = ThreadTimer.new(request_timeout_millis, lambda = ->() { close })
+      @request_timeout_millis = request_timeout_millis
     end
 
     def subscribe(handling_strategy)
       @stomp_client.subscribe("/queue/#{@unique_id}.req", {:ack => 'client-individual', 'activemq.prefetchSize' => 1}) do |msg|
+        @timer_thread.stop_timer
         request = @serialization_provider.deserialize(msg)
         handling_strategy.process_next_request_from(self, request)
+        @timer_thread.start_timer
       end
     end
 
@@ -22,6 +26,7 @@ module TDL
     end
 
     def join
+      @timer_thread.start_timer
       @stomp_client.join
     end
 
