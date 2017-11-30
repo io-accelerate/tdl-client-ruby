@@ -7,7 +7,6 @@ module TDL
       @unique_id = unique_id
       @serialization_provider = JSONRPCSerializationProvider.new
       @timer_thread = ThreadTimer.new(request_timeout_millis, lambda = ->() { close })
-      @request_timeout_millis = request_timeout_millis
     end
 
     def subscribe(handling_strategy)
