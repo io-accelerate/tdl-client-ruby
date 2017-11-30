@@ -17,7 +17,7 @@ module TDL
       @unique_id = unique_id
       @request_timeout_millis = request_timeout_millis
       @logger = Logging.logger[self]
-      @total_processing_time = 0
+      @total_processing_time = nil
     end
 
     def get_request_timeout_millis
@@ -25,8 +25,8 @@ module TDL
     end
 
     def go_live_with(processing_rules)
+      time1 = Time.now.to_f
       begin
-        time1 = Time.now.to_i
         @logger.info 'Starting client.'
         remote_broker = RemoteBroker.new(@hostname, @port, @unique_id, @request_timeout_millis)
         remote_broker.subscribe(ApplyProcessingRules.new(processing_rules))
@@ -34,14 +34,14 @@ module TDL
         remote_broker.join
         @logger.info 'Stopping client.'
         remote_broker.close
-        time2 = Time.now.to_i
-        @total_processing_time = time2 - time1
 
       rescue Exception => e
         # raise e if ENV['TDL_ENV'] == 'test'
         @logger.error "There was a problem processing messages. #{e.message}"
         @logger.error e.backtrace.join("\n")
       end
+      time2 = Time.now.to_f
+      @total_processing_time = (time2 - time1) * 1000.00
     end
 
     def total_processing_time
