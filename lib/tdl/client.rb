@@ -33,9 +33,9 @@ module TDL
         @logger.info 'Waiting for requests.'
         remote_broker.join
         @logger.info 'Stopping client.'
+        remote_broker.close
         time2 = Time.now.to_i
         @total_processing_time = time2 - time1
-        remote_broker.close
 
       rescue Exception => e
         # raise e if ENV['TDL_ENV'] == 'test'
