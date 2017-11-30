@@ -5,31 +5,34 @@ module TDL
     def initialize(hostname, port, unique_id, request_timeout_millis)
       @stomp_client = Stomp::Client.new('', '', hostname, port)
       @unique_id = unique_id
+      @request_queue = "/queue/#{@unique_id}.req"
+      @response_queue = "/queue/#{@unique_id}.resp"
       @serialization_provider = JSONRPCSerializationProvider.new
-      @timer_thread = ThreadTimer.new(request_timeout_millis, lambda = ->() { close })
+      @timer = ThreadTimer.new(request_timeout_millis, lambda = ->() { close unless closed? })
+      @timer.start
     end
 
     def subscribe(handling_strategy)
-      @stomp_client.subscribe("/queue/#{@unique_id}.req", {:ack => 'client-individual', 'activemq.prefetchSize' => 1}) do |msg|
-        @timer_thread.stop_timer
+      @stomp_client.subscribe(@request_queue, {:ack => 'client-individual', 'activemq.prefetchSize' => 1}) do |msg|
+        @timer.stop
         request = @serialization_provider.deserialize(msg)
         handling_strategy.process_next_request_from(self, request)
-        @timer_thread.start_timer
+        @timer.start
       end
     end
 
     def respond_to(request, response)
       serialized_response = @serialization_provider.serialize(response)
-      @stomp_client.publish("/queue/#{@unique_id}.resp", serialized_response)
+      @stomp_client.publish(@response_queue, serialized_response)
       @stomp_client.acknowledge(request.original_message)
     end
 
     def join
-      @timer_thread.start_timer
       @stomp_client.join
     end
 
     def close
+      @stomp_client.unsubscribe(@request_queue)
       @stomp_client.close
     end
 

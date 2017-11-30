@@ -121,6 +121,7 @@ When(/^I go live with the following processing rules:$/) do |table|
   @captured_io = capture_subprocess_io do
     @client.go_live_with(processing_rules)
   end
+  @captured_io.each { |x| puts x }
 end
 
 

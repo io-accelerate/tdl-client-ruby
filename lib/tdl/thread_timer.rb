@@ -6,15 +6,15 @@ class ThreadTimer
     @timer_thread = nil
   end
 
-  def start_timer
+  def start
     @continue = true
     @timer_thread = Thread.new { start_timeout }
   end
 
-  def stop_timer
-    @continue = false
+  def stop
     @timer_thread.terminate unless @timer_thread.nil?
     @timer_thread = nil
+    @continue = false
   end
 
   private

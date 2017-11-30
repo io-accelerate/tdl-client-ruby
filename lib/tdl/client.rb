@@ -33,7 +33,6 @@ module TDL
         @logger.info 'Waiting for requests.'
         remote_broker.join
         @logger.info 'Stopping client.'
-        remote_broker.close unless remote_broker.closed?
 
       rescue Exception => e
         # raise e if ENV['TDL_ENV'] == 'test'
