@@ -36,6 +36,15 @@ Given(/^the broker is not available$/) do
   @client = TDL::Client.new(hostname: '111', port: STOMP_PORT, unique_id: 'broker')
 end
 
+Given(/^I receive 50 identical requests like:$/) do |table|
+  50.times do
+    table.hashes.each do |row|
+      @request_queue.send_text_message(row[:payload])
+    end
+    @request_count = table.hashes.count
+  end
+end
+
 
 Then(/^the time to wait for requests is (\d+)ms$/) do |expected_timeout|
   assert_equal expected_timeout.to_i, @client.get_request_timeout_millis,
@@ -54,6 +63,11 @@ Then(/^the response queue is "([^"]*)"$/) do |expected_value|
                'Request queue has a different value.'
 end
 
+Then(/^the processing time should be lower than (\d+)ms$/) do |expected_value|
+  assert expected_value.to_i > @client.total_processing_time,
+         'Request queue has a different value.'
+end
+
 Given(/^I receive the following requests:$/) do |table|
   table.hashes.each do |row|
     @request_queue.send_text_message(row[:payload])
@@ -70,7 +84,7 @@ USER_IMPLEMENTATIONS = {
     'some logic' => lambda {:value},
     'increment number' => ->(x) {x + 1},
     'echo the request' => ->(x) {x},
-    'work for 500ms' => ->(x) {sleep(0.01); 'OK'},
+    'work for 600ms' => ->(x) {sleep(0.6); 'OK'},
 }
 
 def as_implementation(call)
