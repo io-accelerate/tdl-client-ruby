@@ -29,8 +29,10 @@ module TDL
         time1 = Time.now.to_i
         @logger.info 'Starting client.'
         remote_broker = RemoteBroker.new(@hostname, @port, @unique_id, @request_timeout_millis)
-        remote_broker.subscribe(ApplyProcessingRules.new(processing_rules, @request_timeout_millis))
+        apply_processing_rules = ApplyProcessingRules.new(processing_rules, @request_timeout_millis, remote_broker)
+        remote_broker.subscribe(apply_processing_rules)
         @logger.info 'Waiting for requests.'
+        apply_processing_rules.start_thread
         remote_broker.join
         @logger.info 'Stopping client.'
         time2 = Time.now.to_i
@@ -52,19 +54,33 @@ module TDL
 
     class ApplyProcessingRules
 
-      def initialize(processing_rules, request_timeout_millis)
+      def initialize(processing_rules, request_timeout_millis, remote_broker)
         @processing_rules = processing_rules
         @logger = Logging.logger[self]
         @audit = AuditStream.new
         @request_timeout_millis = request_timeout_millis
         @thread = nil
+        @remote_broker = remote_broker
       end
 
-      def process_next_request_from(remote_broker, request)
+      def start_thread
+        if @thread.nil?
+          @thread = Thread.new do
+            sleep(@request_timeout_millis / 1000.00)
+            @remote_broker.close
+          end
+        end
+      end
+
+      def terminate_thread
         if @thread != nil
           @thread.terminate
         end
         @thread = nil
+      end
+
+      def process_next_request_from(remote_broker, request)
+        terminate_thread
 
         @audit.start_line
         @audit.log(request)
@@ -82,12 +98,7 @@ module TDL
         @audit.end_line
         client_action.prepare_for_next_request(remote_broker)
 
-        if @thread.nil?
-          @thread = Thread.new do
-            sleep(@request_timeout_millis / 1000.00)
-            remote_broker.close
-          end
-        end
+        start_thread
       end
 
     end
