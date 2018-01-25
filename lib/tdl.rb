@@ -1,4 +1,4 @@
-require 'tdl/client'
+require 'tdl/queue/client'
 
 module TDL
 end

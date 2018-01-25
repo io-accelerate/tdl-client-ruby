@@ -1,4 +1,4 @@
-require_relative '../thread_timer'
+require 'tdl/thread_timer'
 
 module TDL
   class RemoteBroker

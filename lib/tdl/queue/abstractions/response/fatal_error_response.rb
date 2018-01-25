@@ -1,4 +1,4 @@
-require 'tdl/actions/stop_action'
+require 'tdl/queue/actions/stop_action'
 
 module TDL
   class FatalErrorResponse
