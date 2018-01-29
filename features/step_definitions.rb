@@ -29,11 +29,24 @@ Given(/^I start with a clean broker and a client for user "([^\"]*)"$/) do |user
   @response_queue = BROKER.add_queue("#{unique_id}.resp")
   @response_queue.purge
 
-  @client = TDL::Client.new(hostname: HOSTNAME, port: STOMP_PORT, unique_id: unique_id)
+  config = TDL::ImplementationRunnerConfig.new()
+    .set_hostname(HOSTNAME)
+    .set_port(STOMP_PORT)
+    .set_unique_id(unique_id)
+
+  @queueBasedImplementationRunnerBuilder = TDL::QueueBasedImplementationRunnerBuilder.new()
+    .set_config(config)
+  @queueBasedImplementationRunner = @queueBasedImplementationRunnerBuilder.create
 end
 
 Given(/^the broker is not available$/) do
-  @client = TDL::Client.new(hostname: '111', port: STOMP_PORT, unique_id: 'broker')
+  config = TDL::ImplementationRunnerConfig.new()
+    .set_hostname('111')
+    .set_port(STOMP_PORT)
+    .set_unique_id('X')
+
+  @queueBasedImplementationRunnerBuilder = TDL::QueueBasedImplementationRunnerBuilder.new()
+    .set_config(config);
 end
 
 Given(/^I receive 50 identical requests like:$/) do |table|
@@ -47,7 +60,7 @@ end
 
 
 Then(/^the time to wait for requests is (\d+)ms$/) do |expected_timeout|
-  assert_equal expected_timeout.to_i, @client.get_request_timeout_millis,
+  assert_equal expected_timeout.to_i, @queueBasedImplementationRunner.get_request_timeout_millis,
                'The client request timeout has a different value.'
 end
 
@@ -64,7 +77,7 @@ Then(/^the response queue is "([^"]*)"$/) do |expected_value|
 end
 
 Then(/^the processing time should be lower than (\d+)ms$/) do |expected_value|
-  assert expected_value.to_i > @client.total_processing_time,
+  assert expected_value.to_i > @queueBasedImplementationRunner.total_processing_time,
          'Request queue has a different value.'
 end
 
@@ -115,11 +128,17 @@ When(/^I go live with the following processing rules:$/) do |table|
   processing_rules = TDL::ProcessingRules.new
 
   table.hashes.each do |row|
-    processing_rules.on(row[:method]).call(as_implementation(row[:call])).then(as_action(row[:action]))
+    @queueBasedImplementationRunnerBuilder
+      .with_solution_for(
+        row[:method],
+        as_implementation(row[:call]),
+        as_action(row[:action]))
   end
-
+  
+  @queueBasedImplementationRunner = @queueBasedImplementationRunnerBuilder.create
+  
   @captured_io = capture_subprocess_io do
-    @client.go_live_with(processing_rules)
+    @queueBasedImplementationRunner.run
   end
   @captured_io.each { |x| puts x }
 end
