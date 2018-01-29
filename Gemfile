@@ -18,4 +18,4 @@ gem 'debase', '~>0.1.4'
 gem 'unirest', '1.1.2'
 
 # Specify your gem's dependencies in tdl-client-ruby.gemspec
-# gemspec
+gemspec
