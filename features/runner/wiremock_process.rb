@@ -9,25 +9,25 @@ class WiremockProcess
   def create_new_mapping(config)
     request_json = {
       request: {
-        urlPattern: config.endpoint_matches,
-        url: config.endpoint_equals,
-        method: config.verb
+        urlPattern: config[:endpointMatches],
+        url: config[:endpointEquals],
+        method: config[:verb]
       }
     }
 
-    if config.accept_header
-      request_json['request']['headers'] = {
+    if config[:acceptHeader]
+      request_json[:request][:headers] = {
         accept: {
-          contains: config.accept_header
+          contains: config[:acceptHeader]
         }
       }
     end
-
-    RestClient.post("#{@base_url}/__admin/mapping/new", )
+    
+    RestClient.post("#{@base_url}/__admin/mappings/new", request_json.to_json, {content_type: :json, accept: :json})
   end
 
   def reset
-    RestClient.post("#{@base_url}/__admin/reset")
+    RestClient.post("#{@base_url}/__admin/reset", {})
   end
 
   def verify_endpoint_was_hit(endpoint, method_type, body)

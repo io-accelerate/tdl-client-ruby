@@ -16,7 +16,7 @@ Given(/^There is a challenge server running on "([^"]*)" port (\d+)$/) do |hostn
   @challenge_server_stub.reset
 end
 
-Given(/^There is a recording server running on "([^"]*)" port (\\d+)$/) do |hostname, port|
+Given(/^There is a recording server running on "([^"]*)" port (\d+)$/) do |hostname, port|
   @recording_server_stub = WiremockProcess.new(hostname, port)
   @recording_server_stub.reset
 end
@@ -34,7 +34,8 @@ Given(/^the recording server exposes the following endpoints$/) do |table|
 end
 
 Given(/^the challenge server returns (\\d+) for all requests$/) do |return_code|
-  config = Object.new
+  config = ServerConfig.new
+
   config.endpoint_matches = "^(.*)"
   config.status = return_code
   config.verb = "ANY"
@@ -43,7 +44,8 @@ Given(/^the challenge server returns (\\d+) for all requests$/) do |return_code|
 end
 
 Given(/^the challenge server returns (\\d+), response body "([^\"]*)" for all requests$/) do |return_code, body|
-  config = Object.new
+  config = ServerConfig.new
+
   config.endpoint_matches = "^(.*)"
   config.status = return_code
   config.verb = "ANY"
