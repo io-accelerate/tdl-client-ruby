@@ -1,8 +1,7 @@
 class ChallengeServerClient
 
-    def initialize(url, journey_id, use_colours)
-      @port = 8222
-      @url = url
+    def initialize(hostname, port, journey_id, use_colours)
+      @base_url = "http://#{hostname}:#{port}"
       @journey_id = journey_id
       use_colours ? @accept_header = 'text/coloured' : @accept_header = 'text/not-coloured'
     end
@@ -21,7 +20,7 @@ class ChallengeServerClient
   
     def send_action(action)
       encoded_path = @journey_id.encode('utf-8')
-      url = "http://#{@url}:#{@port}/action/#{action}/#{encoded_path}"
+      url = "#{@base_url}/action/#{action}/#{encoded_path}"
       response = Unirest.post(url, headers: {'Accept'=> @accept_header, 'Accept-Charset'=> 'UTF-8'})
       ensure_status_ok(response)
       response.body
@@ -31,7 +30,7 @@ class ChallengeServerClient
   
     def get(name)
       journey_id_utf8 = @journey_id.encode('utf-8')
-      url = "http://#{@url}:#{@port}/#{name}/#{journey_id_utf8}"
+      url = "#{@base_url}/#{name}/#{journey_id_utf8}"
       response = Unirest.get(url, headers: {'Accept'=> @accept_header, 'Accept-Charset'=> 'UTF-8'})
       ensure_status_ok(response)
       response.body

@@ -12,6 +12,11 @@ class WiremockProcess
         urlPattern: config[:endpointMatches],
         url: config[:endpointEquals],
         method: config[:verb]
+      },
+      response: {
+        body: config[:responseBody],
+        statusMessage: config[:statusMessage],
+        status: config[:status]
       }
     }
 

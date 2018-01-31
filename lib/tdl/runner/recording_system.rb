@@ -20,7 +20,6 @@ class RecordingSystem
     def is_running
         begin
             response = Unirest.get "#{RECORDING_SYSTEM_ENDPOINT}/status"
-    
             if response.code == 200 and response.body.start_with?('OK')
                 return true
             end

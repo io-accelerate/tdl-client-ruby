@@ -1,7 +1,7 @@
 module TDL
     
   class ChallengeSessionConfig
-    def self.forJourneyId(journey_id)
+    def self.for_journey_id(journey_id)
       ChallengeSessionConfig.new(journey_id)
     end
 
@@ -32,6 +32,11 @@ module TDL
       self
     end
 
+    def with_audit_stream(audit_stream)
+      @audit_stream = audit_stream
+      self
+    end
+
     def get_recording_system_should_be_on
       @recording_system_should_be_on
     end
@@ -50,6 +55,10 @@ module TDL
 
     def get_use_colours
       @use_colours
+    end
+
+    def get_audit_stream
+      @audit_stream
     end
   end
 

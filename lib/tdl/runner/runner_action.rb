@@ -1,5 +1,7 @@
 require 'tdl/queue/actions/client_actions'
 
+include TDL::ClientActions
+
 class RunnerAction
   attr_reader :short_name, :name, :client_action
 
@@ -13,11 +15,11 @@ end
 
 module RunnerActions
   def get_new_round_description
-    RunnerAction.new('new', 'get_new_round_description', ClientActions.stop)
+    RunnerAction.new('new', 'get_new_round_description', TDL::ClientActions.stop)
   end
 
   def deploy_to_production
-      RunnerAction.new('deploy', 'deploy_to_production', ClientActions.publish)
+      RunnerAction.new('deploy', 'deploy_to_production', TDL::ClientActions.publish)
   end
 
   def all

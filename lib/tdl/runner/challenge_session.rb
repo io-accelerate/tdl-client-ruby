@@ -2,6 +2,8 @@ require 'tdl/runner/challenge_server_client'
 require 'tdl/runner/round_management'
 require 'tdl/runner/recording_system'
 
+include RoundManagement
+
 module TDL
 
   class ChallengeSession
@@ -27,7 +29,7 @@ module TDL
     def start
       @recording_system = RecordingSystem.new(@config.get_recording_system_should_be_on)
       
-      unless recording_system.is_recording_system_ok
+      unless @recording_system.is_recording_system_ok
         @audit_stream.write_line 'Please run `record_screen_and_upload` before continuing.'
         return
       end
@@ -46,10 +48,10 @@ module TDL
       begin
         should_continue = check_status_of_challenge
         if should_continue
-          user_input = @user_input_callback.get
+          user_input = @user_input_callback.call
           @audit_stream.write_line "Selected action is: #{user_input}"
-          round_description = execute_user_action user_input
-          RoundManagement.save_description(@recording_system, round_description, audit_stream)
+          round_description = execute_user_action(user_input)
+          RoundManagement.save_description(@recording_system, round_description, @audit_stream)
         end
       rescue ChallengeServerClient::ClientErrorException => e
         @audit_stream.write_line e.message
@@ -64,16 +66,16 @@ module TDL
       @audit_stream = @config.get_audit_stream
 
       journey_progress = @challenge_server_client.get_journey_progress
-      @audit_stream.write_line journey_progress
+      @audit_stream.write_line(journey_progress)
 
       available_actions = @challenge_server_client.get_available_actions
-      @audit_stream.write_line available_actions
+      @audit_stream.write_line(available_actions)
 
-      available_actions.indclude? 'No actions available.'
+      not(available_actions.include?('No actions available.'))
     end
 
     def execute_user_action(user_input)
-      if user_input.equals('deploy')
+      if user_input == 'deploy'
           @runner.run
           last_fetched_round = RoundManagement.get_last_fetched_round
           @recording_system.deploy_notify_event last_fetched_round
