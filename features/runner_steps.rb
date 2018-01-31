@@ -1,3 +1,5 @@
+require 'fileutils'
+
 require_relative './runner/wiremock_process'
 require_relative './runner/test_audit_stream'
 require_relative './runner/noisy_implementation_runner'
@@ -6,7 +8,7 @@ require_relative './runner/quiet_implementation_runner'
 @audit_stream = TestAuditStream.new
 @implementation_runner = QuietImplementationRunner.new
 
-Given(/^There is a challenge server running on "([^"]*)" port (\\d+)$/) do |hostname, port|
+Given(/^There is a challenge server running on "([^"]*)" port (\d+)$/) do |hostname, port|
   @challenge_hostname = hostname
   @port = port
 
@@ -50,12 +52,12 @@ Given(/^the challenge server returns (\\d+), response body "([^\"]*)" for all re
   @challenge_server_stub.create_new_mapping(config)
 end
 
-Given(/^the challenges folder is empty$/)
-  # TODO
+Given(/^the challenges folder is empty$/) do
+  FileUtils.rm_rf(Dir.glob('challenges/*'))
 end
 
 Given(/^the action input comes from a provider returning "([^"]*)"$/) do |s|
-  @action_provider_callback = () -> s
+  @action_provider_callback = ->() {s}
 end
 
 Given(/^there is an implementation runner that prints "([^"]*)"$/) do |s|
@@ -103,12 +105,15 @@ Then(/^the server interaction should look like:$$/) do |expected_output|
 end
 
 Then(/^the recording system should be notified with "([^"]*)"$/) do |expected_output|
-  #String failMessage = "Endpoint \"" + endpoint + "\" should have been hit exactly once, with methodType \"" + methodType + "\"";
   assert @recording_server_stub.verify_endpoint_was_hit('/notify', 'POST', expected_output)
 end
 
 Then(/^the file "([^"]*)" should contain$/) do |file, text|
-  # TODO
+  content = ''
+  File.foreach(file).with_index do |line|
+    content += "#{line}\n"
+  end
+  assert_equal content, text, 'Contents of the file is not what is expected'
 end
 
 Then(/^the implementation runner should be run with the provided implementations$/) do
