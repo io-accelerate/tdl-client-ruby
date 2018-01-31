@@ -1,3 +1,11 @@
+require_relative './runner/wiremock_process'
+require_relative './runner/test_audit_stream'
+require_relative './runner/noisy_implementation_runner'
+require_relative './runner/quiet_implementation_runner'
+
+@audit_stream = TestAuditStream.new
+@implementation_runner = QuietImplementationRunner.new
+
 Given(/^There is a challenge server running on "([^"]*)" port (\\d+)$/) do |hostname, port|
   @challenge_hostname = hostname
   @port = port

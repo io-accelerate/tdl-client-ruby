@@ -15,23 +15,36 @@ class WiremockProcess
       }
     }
 
-    if (config.accept_header)
-      request_json['request']['headers']
+    if config.accept_header
+      request_json['request']['headers'] = {
+        accept: {
+          contains: config.accept_header
+        }
+      }
     end
 
-    RestClient.post('__admin/mapping/new', )
+    RestClient.post("#{@base_url}/__admin/mapping/new", )
   end
 
   def reset
-
+    RestClient.post("#{@base_url}/__admin/reset")
   end
 
   def verify_endpoint_was_hit(endpoint, method_type, body)
-
+    count_requests_with_endpoint(endpoint, method_type, body) === 1
   end
 
   def count_requests_with_endpoint(endpoint, verb, body)
+    request_json = {
+      url: endpoint,
+      method: verb
+    }
 
+    if body
+      request_json['bodyPatterns'] = [{equalTo: body}]
+    end
+
+    RestClient.post("#{@base_url}/__admin/requests/count", request_json)
   end
 
 end
