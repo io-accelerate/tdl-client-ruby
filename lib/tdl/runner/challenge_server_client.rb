@@ -7,7 +7,6 @@ class ChallengeServerClient
     end
   
     def get_journey_progress
-      puts @base_url
       get('journeyProgress')
     end
   
