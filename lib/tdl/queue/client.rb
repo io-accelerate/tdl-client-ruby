@@ -1,11 +1,11 @@
 require 'stomp'
 require 'logging'
 
-require 'tdl/transport/remote_broker'
-require 'tdl/processing_rules'
-require 'tdl/actions/stop_action'
+require 'tdl/queue/transport/remote_broker'
+require 'tdl/queue/processing_rules'
+require 'tdl/queue/actions/stop_action'
 
-require 'tdl/serialization/json_rpc_serialization_provider'
+require 'tdl/queue/serialization/json_rpc_serialization_provider'
 
 module TDL
 

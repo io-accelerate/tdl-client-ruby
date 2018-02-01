@@ -1,6 +1,6 @@
 require 'json'
-require 'tdl/abstractions/request'
-require 'tdl/serialization/deserialization_exception'
+require 'tdl/queue/abstractions/request'
+require 'tdl/queue/serialization/deserialization_exception'
 
 module TDL
   class JSONRPCSerializationProvider

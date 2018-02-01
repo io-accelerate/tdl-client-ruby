@@ -26,11 +26,19 @@ All test require the ActiveMQ broker to be started.
 The following commands are available for the broker.
 
 ```
-./broker/activemq-wrapper start
-./broker/activemq-wrapper console
-./broker/activemq-wrapper stop
+python ./broker/activemq-wrapper.py start
+python wiremock/wiremock-wrapper.py start 41375
+python wiremock/wiremock-wrapper.py start 8222
 ```
 
 Run tests with `rake features`.
 To run a single scenario execute `cucumber path/to/file.feature:line_no`
 Recommendation is to use the cucumber command instead of rake always outside of CI.
+
+# Cleanup
+
+Stop external dependencies
+```
+python ./broker/activemq-wrapper.py stop
+```
+

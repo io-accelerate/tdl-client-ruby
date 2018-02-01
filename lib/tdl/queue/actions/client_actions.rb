@@ -1,6 +1,6 @@
-require 'tdl/actions/publish_action'
-require 'tdl/actions/stop_action'
-require 'tdl/actions/publish_and_stop_action'
+require 'tdl/queue/actions/publish_action'
+require 'tdl/queue/actions/stop_action'
+require 'tdl/queue/actions/publish_and_stop_action'
 
 module TDL
   module ClientActions

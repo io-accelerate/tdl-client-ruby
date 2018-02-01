@@ -1,7 +1,7 @@
-require 'tdl/abstractions/processing_rule'
-require 'tdl/abstractions/response/fatal_error_response'
-require 'tdl/abstractions/response/valid_response'
-require 'tdl/actions/client_actions'
+require 'tdl/queue/abstractions/processing_rule'
+require 'tdl/queue/abstractions/response/fatal_error_response'
+require 'tdl/queue/abstractions/response/valid_response'
+require 'tdl/queue/actions/client_actions'
 
 module TDL
   class ProcessingRules
