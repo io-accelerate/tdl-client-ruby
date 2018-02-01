@@ -1,4 +1,4 @@
-require 'rest-client'
+require 'unirest'
 
 class WiremockProcess
   
@@ -28,11 +28,13 @@ class WiremockProcess
       }
     end
     
-    RestClient.post("#{@base_url}/__admin/mappings/new", request_json.to_json, {content_type: :json, accept: :json})
+    response = Unirest.post "#{@base_url}/__admin/mappings/new",
+      headers: {"Accept" => "application/json"},
+      parameters: request_json.to_json
   end
 
   def reset
-    RestClient.post("#{@base_url}/__admin/reset", {})
+    Unirest.post "#{@base_url}/__admin/reset"
   end
 
   def verify_endpoint_was_hit(endpoint, method_type, body)
@@ -49,8 +51,11 @@ class WiremockProcess
       request_json[:bodyPatterns] = [{equalTo: body}]
     end
 
-    response = RestClient.post("#{@base_url}/__admin/requests/count", request_json.to_json, {content_type: :json, accept: :json})
-    JSON.parse(response.body)["count"]
+    response = Unirest.post "#{@base_url}/__admin/requests/count",
+      headers: {"Accept" => "application/json"},
+      parameters: request_json.to_json
+    
+    response.body["count"]
   end
 
 end
