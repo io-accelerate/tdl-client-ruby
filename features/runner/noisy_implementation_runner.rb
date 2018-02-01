@@ -6,7 +6,7 @@ class NoisyImplementationRunner
   end
   
   def run
-    @audit_stream.write_line(deploy_message)
+    @audit_stream.write_line(@deploy_message)
   end
 
 end

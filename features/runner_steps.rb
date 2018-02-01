@@ -103,7 +103,7 @@ end
 
 Then(/^the server interaction should look like:$$/) do |expected_output|
   total = audit_stream.get_log
-  assert (total == expected_output), 'Expected string is not contained in output'
+  assert_equal total, expected_output, 'Expected string is not contained in output'
 end
 
 Then(/^the recording system should be notified with "([^"]*)"$/) do |expected_output|
@@ -125,5 +125,5 @@ end
 
 Then(/^the client should not ask the user for input$/) do
   total = audit_stream.get_log
-  assert total.include?('Selected action is:' === false)
+  assert !total.include?('Selected action is:')
 end

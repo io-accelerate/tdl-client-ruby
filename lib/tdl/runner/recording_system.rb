@@ -30,7 +30,7 @@ class RecordingSystem
     end
 
     def deploy_notify_event(last_fetched_round)
-        notifyEvent(last_fetched_round, RunnerActions.deploy_to_production.getShortName)
+        notify_event(last_fetched_round, RunnerActions.deploy_to_production.short_name)
     end
 
     def on_new_round(round_id, short_name)
