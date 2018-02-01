@@ -51,7 +51,7 @@ module TDL
           user_input = @user_input_callback.call
           @audit_stream.write_line "Selected action is: #{user_input}"
           round_description = execute_user_action(user_input)
-          RoundManagement.save_description(@recording_system, round_description, @audit_stream)
+          RoundManagement.save_description(@recording_system, round_description, @audit_stream, @config.get_working_directory)
         end
       rescue ChallengeServerClient::ClientErrorException => e
         @audit_stream.write_line e.message
@@ -77,7 +77,7 @@ module TDL
     def execute_user_action(user_input)
       if user_input == 'deploy'
           @runner.run
-          last_fetched_round = RoundManagement.get_last_fetched_round
+          last_fetched_round = RoundManagement.get_last_fetched_round(@config.get_working_directory)
           @recording_system.deploy_notify_event last_fetched_round
       end
 

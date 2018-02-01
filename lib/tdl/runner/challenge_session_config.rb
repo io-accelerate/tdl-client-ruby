@@ -37,6 +37,11 @@ module TDL
       self
     end
 
+    def with_working_directory(working_directory)
+      @working_directory = working_directory
+      self
+    end
+
     def get_recording_system_should_be_on
       @recording_system_should_be_on
     end
@@ -59,6 +64,10 @@ module TDL
 
     def get_audit_stream
       @audit_stream
+    end
+
+    def get_working_directory
+      @working_directory
     end
   end
 

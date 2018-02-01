@@ -7,6 +7,7 @@ require_relative './runner/quiet_implementation_runner'
 
 audit_stream = TestAuditStream.new
 implementation_runner = QuietImplementationRunner.new
+working_directory = './'
 
 Given(/^There is a challenge server running on "([^"]*)" port (\d+)$/) do |hostname, port|
   @challenge_hostname = hostname
@@ -86,6 +87,7 @@ When(/^user starts client$/) do
     .with_colours(true)
     .with_audit_stream(audit_stream)
     .with_recording_system_should_be_on(true)
+    .with_working_directory(working_directory)
 
   TDL::ChallengeSession.for_runner(implementation_runner)
     .with_config(config)
