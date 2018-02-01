@@ -35,9 +35,13 @@ Given(/^the recording server exposes the following endpoints$/) do |table|
 end
 
 Given(/^the challenge server returns (\d+) for all requests$/) do |return_code|
+  #HACK to get the unirest ruby client to NOT follow the redirect
+  (return_code.to_i.equal? 301) ? _return_code = 306 : _return_code = return_code
+
+  puts ">>>>>>>>>#{_return_code},#{return_code}"
   @challenge_server_stub.create_new_mapping({
     endpointMatches: '^(.*)',
-    status: return_code,
+    status: _return_code,
     verb: 'ANY'
   })
 end
