@@ -77,6 +77,8 @@ Given(/^the challenge server is broken$/) do
 end
 
 When(/^user starts client$/) do
+  audit_stream.clear
+
   config = TDL::ChallengeSessionConfig.for_journey_id(@journey_id)
     .with_server_hostname(@challenge_hostname)
     .with_port(@port)
@@ -92,10 +94,13 @@ When(/^user starts client$/) do
 end
 
 Then(/^the server interaction should contain the following lines:$/) do |expected_output|
-  total = audit_stream.get_log
-  lines = expected_output.split('\n')
+  total = audit_stream.get_log.strip
+  lines = expected_output.split("\n")
   lines.each do |line|
-    assert total.include?(line), 'Expected string is not contained in output'
+    line = line.strip
+    unless line.empty?
+      assert total.include?(line), 'Expected string is not contained in output'
+    end
   end
 end
 

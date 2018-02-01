@@ -46,10 +46,11 @@ class WiremockProcess
     }
 
     if body
-      request_json['bodyPatterns'] = [{equalTo: body}]
+      request_json[:bodyPatterns] = [{equalTo: body}]
     end
 
-    RestClient.post("#{@base_url}/__admin/requests/count", request_json)
+    response = RestClient.post("#{@base_url}/__admin/requests/count", request_json.to_json, {content_type: :json, accept: :json})
+    JSON.parse(response.body)["count"]
   end
 
 end

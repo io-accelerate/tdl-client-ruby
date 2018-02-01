@@ -8,9 +8,10 @@ class TestAuditStream
   end
 
   def get_log
-    total = @total
-    puts total
+    @total
+  end
+
+  def clear
     @total = ''
-    total
   end
 end
