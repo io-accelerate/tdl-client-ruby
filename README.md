@@ -42,3 +42,10 @@ Stop external dependencies
 python ./broker/activemq-wrapper.py stop
 ```
 
+
+# To release
+
+Run
+```
+./release.sh
+```
