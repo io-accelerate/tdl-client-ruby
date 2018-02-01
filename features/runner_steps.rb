@@ -34,25 +34,21 @@ Given(/^the recording server exposes the following endpoints$/) do |table|
   end
 end
 
-Given(/^the challenge server returns (\\d+) for all requests$/) do |return_code|
-  config = ServerConfig.new
-
-  config.endpoint_matches = "^(.*)"
-  config.status = return_code
-  config.verb = "ANY"
-
-  @challenge_server_stub.create_new_mapping(config)
+Given(/^the challenge server returns (\d+) for all requests$/) do |return_code|
+  @challenge_server_stub.create_new_mapping({
+    endpointMatches: '^(.*)',
+    status: return_code,
+    verb: 'ANY'
+  })
 end
 
-Given(/^the challenge server returns (\\d+), response body "([^\"]*)" for all requests$/) do |return_code, body|
-  config = ServerConfig.new
-
-  config.endpoint_matches = "^(.*)"
-  config.status = return_code
-  config.verb = "ANY"
-  config.response_body = body
-
-  @challenge_server_stub.create_new_mapping(config)
+Given(/^the challenge server returns (\d+), response body "([^"]*)" for all requests$/) do |return_code, body|
+  @challenge_server_stub.create_new_mapping({
+    endpointMatches: '^(.*)',
+    status: return_code,
+    verb: 'ANY',
+    responseBody: body
+  })
 end
 
 Given(/^the challenges folder is empty$/) do
