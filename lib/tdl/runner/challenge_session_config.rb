@@ -1,3 +1,5 @@
+require 'tdl/audit/console_audit_stream'
+
 module TDL
     
   class ChallengeSessionConfig
@@ -10,7 +12,8 @@ module TDL
       @use_colours = true
       @recording_system_should_be_on = true
       @journey_id = journey_id
-    end 
+      @audit_stream = ConsoleAuditStream.new
+    end
 
     def with_server_hostname(hostname)
       @hostname = hostname
