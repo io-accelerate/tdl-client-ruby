@@ -30,7 +30,7 @@ module TDL
             deploy_processing_rules = ProcessingRules.new()
             deploy_processing_rules
                 .on('display_description')
-                .call(-> (params) {'OK'})
+                .call(-> (*params) {'OK'})
                 .then(ClientActions.publish)
             deploy_processing_rules
         end
