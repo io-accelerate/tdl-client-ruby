@@ -1,6 +1,6 @@
 require 'logging'
-
 require 'tdl/queue/processing_rules'
+require 'tdl/queue/transport/remote_broker'
 
 module TDL
     class QueueBasedImplementationRunner
