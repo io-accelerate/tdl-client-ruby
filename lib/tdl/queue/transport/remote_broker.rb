@@ -1,4 +1,6 @@
+require 'stomp'
 require 'tdl/thread_timer'
+require 'tdl/queue/serialization/json_rpc_serialization_provider'
 
 module TDL
   class RemoteBroker

@@ -1,6 +1,6 @@
 require 'logging'
-
 require 'tdl/queue/processing_rules'
+require 'tdl/queue/transport/remote_broker'
 
 module TDL
     class QueueBasedImplementationRunner
@@ -72,4 +72,30 @@ module TDL
       
         end
     end
+end
+
+class AuditStream
+
+    def initialize
+      @logger = Logging.logger[self]
+      start_line
+    end
+
+    def start_line
+      @str = ''
+    end
+
+    def log(auditable)
+      text = auditable.audit_text
+      if not text.empty? and @str.length > 0
+        @str << ', '
+      end
+
+      @str << text
+    end
+
+    def end_line
+      @logger.info @str
+    end
+
 end
