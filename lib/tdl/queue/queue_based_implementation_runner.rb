@@ -98,5 +98,4 @@ class AuditStream
       @logger.info @str
     end
 
-  end
 end
