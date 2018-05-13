@@ -12,7 +12,7 @@ module RoundManagement
 
     newline_index = raw_description.index("\n")
     round_id = raw_description[0..newline_index - 1]
-    listener.on_new_round(round_id, RunnerActions.get_new_round_description.short_name) if round_id != get_last_fetched_round(working_directory)
+    listener.on_new_round(round_id) if round_id != get_last_fetched_round(working_directory)
 
     display_and_save_description(round_id, raw_description, audit_stream, working_directory)
   end

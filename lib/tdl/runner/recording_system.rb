@@ -3,8 +3,15 @@ require 'tdl/runner/runner_action'
 
 RECORDING_SYSTEM_ENDPOINT = 'http://localhost:41375'
 
+module RecordingEvent
+  ROUND_START = 'new'
+  ROUND_SOLUTION_DEPLOY = 'deploy'
+  ROUND_COMPLETED = 'done'
+end
+
+
 class RecordingSystem
-    
+
     def initialize(recording_required)
         @recording_required = recording_required
     end
@@ -14,7 +21,7 @@ class RecordingSystem
     end
 
     def is_recording_system_ok
-        return is_recording_required ? is_running : true
+      is_recording_required ? is_running : true
     end
 
     def is_running
@@ -29,28 +36,25 @@ class RecordingSystem
         false
     end
 
-    def deploy_notify_event(last_fetched_round)
-        notify_event(last_fetched_round, RunnerActions.deploy_to_production.short_name)
+
+    def on_new_round(round_id)
+        notify_event(round_id, RecordingEvent::ROUND_START)
     end
 
-    def on_new_round(round_id, short_name)
-        notify_event(round_id, short_name)
-    end
-
-    def notify_event(last_fetched_round, short_name)
+    def notify_event(round_id, event_name)
         if not @recording_required
           return
         end
-    
+
         begin
           response = Unirest.post "#{RECORDING_SYSTEM_ENDPOINT}/notify",
-                                  parameters:"#{last_fetched_round}/#{short_name}"
-    
+                                  parameters:"#{round_id}/#{event_name}"
+
           unless response.code == 200
             puts "Recording system returned code: #{response.code}"
             return
           end
-    
+
           unless response.body.start_with?('ACK')
             puts "Recording system returned body: #{response.body}"
           end

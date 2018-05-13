@@ -78,7 +78,7 @@ module TDL
       if user_input == 'deploy'
           @runner.run
           last_fetched_round = RoundManagement.get_last_fetched_round(@config.get_working_directory)
-          @recording_system.deploy_notify_event last_fetched_round
+          @recording_system.notify_event(last_fetched_round, RecordingEvent::ROUND_SOLUTION_DEPLOY)
       end
 
       execute_action user_input
@@ -86,6 +86,11 @@ module TDL
 
     def execute_action(user_input)
       action_feedback = @challenge_server_client.send_action user_input
+      if action_feedback.include?('Round time for')
+        last_fetched_round = RoundManagement.get_last_fetched_round(@config.get_working_directory)
+        @recording_system.notify_event(last_fetched_round, RecordingEvent::ROUND_COMPLETED)
+      end
+
       @audit_stream.write_line action_feedback
       @challenge_server_client.get_round_description
     end
