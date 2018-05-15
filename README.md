@@ -40,6 +40,8 @@ Recommendation is to use the cucumber command instead of rake always outside of 
 Stop external dependencies
 ```
 python ./broker/activemq-wrapper.py stop
+python wiremock/wiremock-wrapper.py stop 41375
+python wiremock/wiremock-wrapper.py stop 8222
 ```
 
 
