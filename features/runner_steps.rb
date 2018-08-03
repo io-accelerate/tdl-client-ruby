@@ -118,6 +118,11 @@ Then(/^the recording system should be notified with "([^"]*)"$/) do |expected_ou
   assert @recording_server_stub.verify_endpoint_was_hit('/notify', 'POST', expected_output)
 end
 
+Then(/^the recording system should have received a stop signal$/) do
+  audit_stream.get_log
+  assert @recording_server_stub.verify_endpoint_was_hit('/stop', 'POST', "")
+end
+
 Then(/^the file "([^"]*)" should contain$/) do |file, text|
   content = File.read(file)
   assert_equal content.strip, text.strip.gsub(/\r/,''), 'Contents of the file is not what is expected'

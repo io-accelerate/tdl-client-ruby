@@ -42,25 +42,36 @@ class RecordingSystem
     end
 
     def notify_event(round_id, event_name)
-        if not @recording_required
+      puts "Notify round #{round_id}, event #{event_name}"
+      _send_post("/notify", "#{round_id}/#{event_name}")
+    end
+
+    def tell_to_stop
+      puts "Stopping recording system"
+      _send_post("/stop", "")
+    end
+
+    def _send_post(endpoint, body)
+      unless @recording_required
+        return
+      end
+
+      begin
+        response = Unirest.post "#{RECORDING_SYSTEM_ENDPOINT}#{endpoint}",
+                                parameters: body
+
+        unless response.code == 200
+          puts "Recording system returned code: #{response.code}"
           return
         end
 
-        begin
-          response = Unirest.post "#{RECORDING_SYSTEM_ENDPOINT}/notify",
-                                  parameters:"#{round_id}/#{event_name}"
-
-          unless response.code == 200
-            puts "Recording system returned code: #{response.code}"
-            return
-          end
-
-          unless response.body.start_with?('ACK')
-            puts "Recording system returned body: #{response.body}"
-          end
-        rescue StandardError => e
-          puts "Could not reach recording system: #{e.message}"
+        unless response.body.start_with?('ACK')
+          puts "Recording system returned body: #{response.body}"
         end
+      rescue StandardError => e
+        puts "Could not reach recording system: #{e.message}"
+      end
     end
+
 
 end
