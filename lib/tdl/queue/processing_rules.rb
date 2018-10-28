@@ -1,7 +1,6 @@
 require 'tdl/queue/abstractions/processing_rule'
 require 'tdl/queue/abstractions/response/fatal_error_response'
 require 'tdl/queue/abstractions/response/valid_response'
-require 'tdl/queue/actions/client_actions'
 
 module TDL
   class ProcessingRules
@@ -13,8 +12,8 @@ module TDL
 
     # ~~~~ Builders
 
-    def add(method_name, user_implementation, client_action)
-      @rules[method_name] = ProcessingRule.new(user_implementation, client_action)
+    def add(method_name, user_implementation)
+      @rules[method_name] = ProcessingRule.new(user_implementation)
     end
 
     def on(method_name)
@@ -33,8 +32,8 @@ module TDL
         self
       end
 
-      def then(client_action)
-        @instance.add(@method_name, @user_implementation, client_action)
+      def build()
+        @instance.add(@method_name, @user_implementation)
       end
     end
 
@@ -54,7 +53,7 @@ module TDL
         user_implementation = processing_rule.user_implementation
         result = user_implementation.call(*request.params)
 
-        return ValidResponse.new(request.id, result, processing_rule.client_action)
+        return ValidResponse.new(request.id, result)
       rescue Exception => e
         message = '"user implementation raised exception"'
         @logger.warn("#{message}, #{e.message}")

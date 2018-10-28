@@ -59,15 +59,15 @@ module TDL
               # Obtain response from user
               response = @processing_rules.get_response_for(request)
               @audit.log(response)
-      
-              # Obtain action
-              client_action = response.client_action
-      
+
               # Act
-              client_action.after_response(remote_broker, request, response)
-              @audit.log(client_action)
-              @audit.end_line
-              client_action.prepare_for_next_request(remote_broker)
+              if response = fatal_error_response
+                 @audit.end_line
+                 remote_broker.close
+                 return
+              end
+
+              remote_broker.respond_to(request, response)
             end
       
         end

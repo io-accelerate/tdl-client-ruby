@@ -108,21 +108,6 @@ def as_implementation(call)
   end
 end
 
-include TDL::ClientActions
-CLIENT_ACTIONS = {
-    'publish' => publish,
-    'stop' => stop,
-    'publish and stop' => publish_and_stop
-}
-
-def as_action(actionName)
-  if CLIENT_ACTIONS.has_key?(actionName)
-    CLIENT_ACTIONS[actionName]
-  else
-    raise "Not a valid action reference: \"#{actionName}\""
-  end
-end
-
 
 When(/^I go live with the following processing rules:$/) do |table|
   processing_rules = TDL::ProcessingRules.new
