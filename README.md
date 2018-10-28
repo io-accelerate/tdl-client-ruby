@@ -10,7 +10,7 @@
 Project contains submodules as mentioned in the `.gitmodules` file:
 
 - broker
-- tdl/client-spec (gets cloned into features)
+- tdl/client-spec (gets cloned into features/spec)
 - wiremock 
 
 Use the below command to update the submodules of the project:
@@ -45,6 +45,16 @@ gem install bundler
 #### Install coveralls
 ```bash
 gem install coveralls
+```
+
+#### Install cucumber
+```bash
+gem install cucumber
+```
+
+#### Install all the gems in the project
+```bash
+bundle install
 ```
 
 #### Manual 
