@@ -63,10 +63,17 @@ module TDL
 
               # Act
               if response.instance_of? FatalErrorResponse
-                 remote_broker.close
-                 @audit.end_line
+                 # Do nothing
               else
                  remote_broker.respond_to(request, response)
+              end
+
+              @audit.end_line
+
+              if response.instance_of? FatalErrorResponse
+                 remote_broker.close
+              else
+                 # Do nothing
               end
             end
         end

@@ -2,11 +2,11 @@ module TDL
   class FatalErrorResponse
 
     def initialize(message)
-      @message = message
+      @message = message + ", (NOT PUBLISHED)"
     end
 
     def audit_text
-      "error = #{@message}, (NOT PUBLISHED)"
+      "error = #{@message}"
     end
   end
 end
