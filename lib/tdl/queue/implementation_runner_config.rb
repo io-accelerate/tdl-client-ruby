@@ -8,6 +8,8 @@ module TDL
             @port = 61613
             @time_to_wait_for_requests = 500
             @audit_stream = ConsoleAuditStream.new
+            @request_queue_name = ''
+            @response_queue_name = ''
         end
 
         def set_hostname(hostname)
@@ -20,8 +22,13 @@ module TDL
             self
         end
 
-        def set_unique_id(unique_id)
-            @unique_id = unique_id
+        def set_request_queue_name(queue_name)
+            @request_queue_name = queue_name
+            self
+        end
+
+        def set_response_queue_name(queue_name)
+            @response_queue_name = queue_name
             self
         end
 
@@ -43,8 +50,12 @@ module TDL
             @port
         end
 
-        def get_unique_id
-            @unique_id
+        def get_request_queue_name
+            @request_queue_name
+        end
+
+        def get_response_queue_name
+            @response_queue_name
         end
 
         def get_time_to_wait_for_requests

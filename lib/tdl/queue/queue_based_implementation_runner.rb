@@ -19,7 +19,8 @@ module TDL
                 remote_broker = RemoteBroker.new(
                     @config.get_hostname,
                     @config.get_port,
-                    @config.get_unique_id,
+                    @config.get_request_queue_name,
+                    @config.get_response_queue_name,
                     @config.get_time_to_wait_for_requests)
                 remote_broker.subscribe(ApplyProcessingRules.new(@deploy_processing_rules))
                 @logger.info 'Waiting for requests.'
@@ -61,15 +62,13 @@ module TDL
               @audit.log(response)
 
               # Act
-              if response = fatal_error_response
-                 @audit.end_line
+              if response.instance_of? FatalErrorResponse
                  remote_broker.close
-                 return
+                 @audit.end_line
+              else
+                 remote_broker.respond_to(request, response)
               end
-
-              remote_broker.respond_to(request, response)
             end
-      
         end
     end
 end
