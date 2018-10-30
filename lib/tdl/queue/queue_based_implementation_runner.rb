@@ -62,11 +62,7 @@ module TDL
               @audit.log(response)
 
               # Act
-              if response.instance_of? FatalErrorResponse
-                 # Do nothing
-              else
-                 remote_broker.respond_to(request, response)
-              end
+              after_response(remote_broker, request, response)
 
               @audit.end_line
 
@@ -74,6 +70,14 @@ module TDL
                  remote_broker.close
               else
                  # Do nothing
+              end
+            end
+
+            def after_response(remote_broker, request, response)
+              if response.instance_of? FatalErrorResponse
+                 # Do nothing
+              else
+                 remote_broker.respond_to(request, response)
               end
             end
         end
