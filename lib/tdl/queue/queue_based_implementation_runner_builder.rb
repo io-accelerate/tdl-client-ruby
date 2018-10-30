@@ -1,5 +1,4 @@
 require 'tdl/queue/queue_based_implementation_runner'
-require 'tdl/queue/actions/client_actions'
 
 module TDL
     
@@ -14,11 +13,11 @@ module TDL
             self
         end
 
-        def with_solution_for(method_name, user_implementation, action = ClientActions.publish)
+        def with_solution_for(method_name, user_implementation)
             @deploy_processing_rules
                 .on(method_name)
                 .call(user_implementation)
-                .then(action)
+                .build()
             self
         end
 
@@ -31,7 +30,7 @@ module TDL
             deploy_processing_rules
                 .on('display_description')
                 .call(-> (*params) {'OK'})
-                .then(ClientActions.publish)
+                .build()
             deploy_processing_rules
         end
 

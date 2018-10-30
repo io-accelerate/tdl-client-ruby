@@ -19,20 +19,25 @@ BROKER.connect
 # Broker client definition
 STOMP_PORT = 21613
 
+REQUEST_QUEUE_NAME = 'some-user-req'
+RESPONSE_QUEUE_NAME = 'some-user-resp'
+
 # ~~~~~ Setup
 
-Given(/^I start with a clean broker and a client for user "([^\"]*)"$/) do |username|
-  unique_id = username
-  @request_queue = BROKER.add_queue("#{unique_id}.req")
+Given(/^I start with a clean broker having a request and a response queue$/) do ||
+  @request_queue = BROKER.add_queue(REQUEST_QUEUE_NAME)
   @request_queue.purge
 
-  @response_queue = BROKER.add_queue("#{unique_id}.resp")
+  @response_queue = BROKER.add_queue(RESPONSE_QUEUE_NAME)
   @response_queue.purge
+end
 
+Given(/^a client that connects to the queues$/) do
   config = TDL::ImplementationRunnerConfig.new()
     .set_hostname(HOSTNAME)
     .set_port(STOMP_PORT)
-    .set_unique_id(unique_id)
+    .set_request_queue_name(REQUEST_QUEUE_NAME)
+    .set_response_queue_name(RESPONSE_QUEUE_NAME)
 
   @queueBasedImplementationRunnerBuilder = TDL::QueueBasedImplementationRunnerBuilder.new()
     .set_config(config)
@@ -43,7 +48,8 @@ Given(/^the broker is not available$/) do
   config = TDL::ImplementationRunnerConfig.new()
     .set_hostname('111')
     .set_port(STOMP_PORT)
-    .set_unique_id('X')
+    .set_request_queue_name('X')
+    .set_response_queue_name('Y')
 
   @queueBasedImplementationRunnerBuilder = TDL::QueueBasedImplementationRunnerBuilder.new()
     .set_config(config);
@@ -108,21 +114,6 @@ def as_implementation(call)
   end
 end
 
-include TDL::ClientActions
-CLIENT_ACTIONS = {
-    'publish' => publish,
-    'stop' => stop,
-    'publish and stop' => publish_and_stop
-}
-
-def as_action(actionName)
-  if CLIENT_ACTIONS.has_key?(actionName)
-    CLIENT_ACTIONS[actionName]
-  else
-    raise "Not a valid action reference: \"#{actionName}\""
-  end
-end
-
 
 When(/^I go live with the following processing rules:$/) do |table|
   processing_rules = TDL::ProcessingRules.new
@@ -131,8 +122,7 @@ When(/^I go live with the following processing rules:$/) do |table|
     @queueBasedImplementationRunnerBuilder
       .with_solution_for(
         row[:method],
-        as_implementation(row[:call]),
-        as_action(row[:action]))
+        as_implementation(row[:call]))
   end
   
   @queueBasedImplementationRunner = @queueBasedImplementationRunnerBuilder.create
@@ -177,6 +167,16 @@ end
 
 Then(/^the client should not publish any response$/) do
   assert_equal 0, @response_queue.get_size,
+               'The response queue has different size. Messages have been published'
+end
+
+Then(/^the client should consume one request$/) do
+  assert_equal @request_count - 1, @request_queue.get_size,
+               'The request queue has different size. Messages have been consumed'
+end
+
+Then(/^the client should publish one response$/) do
+  assert_equal @request_count - 2, @response_queue.get_size,
                'The response queue has different size. Messages have been published'
 end
 

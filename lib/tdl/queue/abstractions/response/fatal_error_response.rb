@@ -1,14 +1,8 @@
-require 'tdl/queue/actions/stop_action'
-
 module TDL
   class FatalErrorResponse
 
     def initialize(message)
-      @message = message
-    end
-
-    def client_action
-      StopAction.new
+      @message = message + ", (NOT PUBLISHED)"
     end
 
     def audit_text

@@ -4,11 +4,10 @@ require 'tdl/queue/serialization/json_rpc_serialization_provider'
 
 module TDL
   class RemoteBroker
-    def initialize(hostname, port, unique_id, request_timeout_millis)
+    def initialize(hostname, port, request_queue_name, response_queue_name, request_timeout_millis)
       @stomp_client = Stomp::Client.new('', '', hostname, port)
-      @unique_id = unique_id
-      @request_queue = "/queue/#{@unique_id}.req"
-      @response_queue = "/queue/#{@unique_id}.resp"
+      @request_queue = "/queue/#{request_queue_name}"
+      @response_queue = "/queue/#{response_queue_name}"
       @serialization_provider = JSONRPCSerializationProvider.new
       @timer = ThreadTimer.new(request_timeout_millis, lambda = ->() { close unless closed? })
       @timer.start

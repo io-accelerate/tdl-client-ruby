@@ -1,25 +1,20 @@
-require 'tdl/queue/actions/client_actions'
-
-include TDL::ClientActions
-
 class RunnerAction
-  attr_reader :short_name, :name, :client_action
+  attr_reader :short_name, :name
 
-  def initialize(short_name, name, client_action)
+  def initialize(short_name, name)
     @short_name = short_name
     @name = name
-    @client_action = client_action
   end
 
 end
 
 module RunnerActions
   def get_new_round_description
-    RunnerAction.new('new', 'get_new_round_description', TDL::ClientActions.stop)
+    RunnerAction.new('new', 'get_new_round_description')
   end
 
   def deploy_to_production
-      RunnerAction.new('deploy', 'deploy_to_production', TDL::ClientActions.publish)
+      RunnerAction.new('deploy', 'deploy_to_production')
   end
 
   def all
