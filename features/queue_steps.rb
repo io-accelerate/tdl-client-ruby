@@ -102,7 +102,9 @@ USER_IMPLEMENTATIONS = {
     'throw exception' => lambda {|*args| raise StandardError},
     'some logic' => lambda {:value},
     'increment number' => ->(x) {x + 1},
-    'echo the request' => ->(x) {x},
+    'replay the value' => ->(x) {x},
+    'sum the elements of an array' => ->(x) {x.reduce(0) { |sum, num| sum + num }},
+    'generate array of integers' => lambda {|x, y| (x...y).to_a},
     'work for 600ms' => ->(x) {sleep(0.6); 'OK'},
 }
 
@@ -116,21 +118,22 @@ end
 
 
 When(/^I go live with the following processing rules:$/) do |table|
-  processing_rules = TDL::ProcessingRules.new
-
   table.hashes.each do |row|
     @queueBasedImplementationRunnerBuilder
       .with_solution_for(
         row[:method],
         as_implementation(row[:call]))
   end
-  
+
   @queueBasedImplementationRunner = @queueBasedImplementationRunnerBuilder.create
-  
-  @captured_io = capture_subprocess_io do
-    @queueBasedImplementationRunner.run
+
+  begin
+    @captured_io = capture_subprocess_io do
+      @queueBasedImplementationRunner.run
+    end
+  ensure
+    @captured_io.each { |x| puts x }
   end
-  @captured_io.each { |x| puts x }
 end
 
 
