@@ -17,8 +17,7 @@ end
 
 # Get Spec version from Git
 spec_folder = File.expand_path('../features/spec',__FILE__).to_s
-# major_minor_version = `git --git-dir #{spec_folder}/.git describe --all | cut -d '/' -f 2 | tr -d 'v'`.strip
-major_minor_version = "1.2".strip
+major_minor_version = `git --git-dir #{spec_folder}/.git describe --all | cut -d '/' -f 2 | tr -d 'v'`.strip
 
 # Compute next version
 previous_version = ComparableVersion.new(TDL::PREVIOUS_VERSION)
