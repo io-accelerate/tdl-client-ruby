@@ -107,7 +107,7 @@ or
 
 ```bash
 ./stopExternalDependencies.sh
-``` 
+```
 
 
 ## To release
