@@ -116,7 +116,22 @@ or
 
 ## To release
 
-Run
+Check the version in:
 ```
-./release.sh
+lib/tdl/previous_version.rb
+```
+
+Build Gem
+```
+bundle exec rake build
+```
+
+Push to Rubygems
+```
+bundle exec rake release
+```
+
+Manually update the version in:
+```
+lib/tdl/previous_version.rb
 ```
