@@ -58,8 +58,7 @@ class RecordingSystem
       end
 
       begin
-        response = Net::HTTP.post(URI("#{RECORDING_SYSTEM_ENDPOINT}#{endpoint}"),
-                                  body)
+        response = Net::HTTP.post(URI("#{RECORDING_SYSTEM_ENDPOINT}#{endpoint}"), body)
 
         unless response.is_a?(Net::HTTPSuccess)
           puts "Recording system returned code: #{response.code}"

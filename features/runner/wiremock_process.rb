@@ -28,7 +28,7 @@ class WiremockProcess
         }
       }
     end
-    Net::HTTP.post(URI("#{@base_url}/__admin/reset"),
+    Net::HTTP.post(URI("#{@base_url}/__admin/mappings/new"),
                    request_json.to_json,
                    { "Accept" => "application/json"})
   end
@@ -55,7 +55,8 @@ class WiremockProcess
                    request_json.to_json,
                    { "Accept" => "application/json"})
 
-    response.body["count"]
+    json_response = JSON.parse(response.body)
+    json_response["count"]
   end
 
 end

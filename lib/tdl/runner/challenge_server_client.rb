@@ -20,8 +20,8 @@ class ChallengeServerClient
   
     def send_action(action)
       encoded_path = @journey_id.encode('utf-8')
-      url = "#{@base_url}/action/#{action}/#{encoded_path}"
-      response = Unirest.post(url, headers: {'Accept'=> @accept_header, 'Accept-Charset'=> 'UTF-8'})
+      url = URI("#{@base_url}/action/#{action}/#{encoded_path}")
+      response = Net::HTTP.post(url, "", {'Accept'=> @accept_header, 'Accept-Charset'=> 'UTF-8'})
       ensure_status_ok(response)
       response.body
     end
@@ -30,18 +30,18 @@ class ChallengeServerClient
   
     def get(name)
       journey_id_utf8 = @journey_id.encode('utf-8')
-      url = "#{@base_url}/#{name}/#{journey_id_utf8}"
-      response = Unirest.get(url, headers: {'Accept'=> @accept_header, 'Accept-Charset'=> 'UTF-8'})
+      url = URI("#{@base_url}/#{name}/#{journey_id_utf8}")
+      response = Net::HTTP.get_response(url, {'Accept'=> @accept_header, 'Accept-Charset'=> 'UTF-8'})
       ensure_status_ok(response)
       response.body
     end
   
     def ensure_status_ok(response)
-      if client_error?(response.code)
+      if client_error?(response.code.to_i)
         raise ClientErrorException, response.body
-      elsif server_error?(response.code)
+      elsif server_error?(response.code.to_i)
         raise ServerErrorException, response.body
-      elsif other_error_response?(response.code)
+      elsif other_error_response?(response.code.to_i)
         raise OtherCommunicationException, response.body
       end
     end

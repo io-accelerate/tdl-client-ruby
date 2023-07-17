@@ -18,7 +18,7 @@ module RoundManagement
   end
 
   def display_and_save_description(label, description, audit_stream, working_directory)
-    Dir.mkdir(File.join(working_directory, CHALLENGES_FOLDER)) unless File.exists?(File.join(working_directory, CHALLENGES_FOLDER))
+    Dir.mkdir(File.join(working_directory, CHALLENGES_FOLDER)) unless File.exist?(File.join(working_directory, CHALLENGES_FOLDER))
     
     output_description = File.open("#{working_directory}/#{CHALLENGES_FOLDER}/#{label}.txt", 'w')
     output_description << description
