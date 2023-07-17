@@ -1,4 +1,5 @@
-require 'unirest'
+require 'uri'
+require 'net/http'
 
 class WiremockProcess
   
@@ -27,14 +28,13 @@ class WiremockProcess
         }
       }
     end
-    
-    response = Unirest.post "#{@base_url}/__admin/mappings/new",
-      headers: {"Accept" => "application/json"},
-      parameters: request_json.to_json
+    Net::HTTP.post(URI("#{@base_url}/__admin/reset"),
+                   request_json.to_json,
+                   { "Accept" => "application/json"})
   end
 
   def reset
-    Unirest.post "#{@base_url}/__admin/reset"
+    Net::HTTP.post(URI("#{@base_url}/__admin/reset"), "")
   end
 
   def verify_endpoint_was_hit(endpoint, method_type, body)
@@ -51,10 +51,10 @@ class WiremockProcess
       request_json[:bodyPatterns] = [{equalTo: body}]
     end
 
-    response = Unirest.post "#{@base_url}/__admin/requests/count",
-      headers: {"Accept" => "application/json"},
-      parameters: request_json.to_json
-    
+    response = Net::HTTP.post(URI("#{@base_url}/__admin/requests/count"),
+                   request_json.to_json,
+                   { "Accept" => "application/json"})
+
     response.body["count"]
   end
 

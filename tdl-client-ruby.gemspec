@@ -50,17 +50,14 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'stomp', '1.3.4'
-  spec.add_runtime_dependency 'logging', '2.0.0'
-  spec.add_runtime_dependency 'unirest', '1.1.2'
+  spec.add_runtime_dependency 'stomp', '1.4.10'
+  spec.add_runtime_dependency 'logging', '2.3.1'
 
-  spec.add_development_dependency 'bundler', '~> 1.9'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'minitest', '5.4.1'
-  spec.add_development_dependency 'minitest-reporters', '~> 1.0', '>= 1.0.19'
-  spec.add_development_dependency 'simplecov', '~>0.10.0'
-  spec.add_development_dependency 'coveralls', '~>0.8.2'
-  spec.add_development_dependency 'json', '~> 1.8', '~>1.8.3'
-  spec.add_development_dependency 'cucumber', '>= 2.0.0', '<2.1.0'
-  spec.add_development_dependency 'debase', '~>0.1.4'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake', '~> 13.0.6'
+  spec.add_development_dependency 'minitest', '~> 5.18.1'
+  spec.add_development_dependency 'minitest-reporters', '~> 1.6.0'
+  spec.add_development_dependency 'json', '~> 2.6.3'
+  spec.add_development_dependency 'cucumber', '~> 8.0.0'
+  spec.add_development_dependency 'debase', '~> 3.0.0.beta.6'
 end

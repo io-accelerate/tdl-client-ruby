@@ -25,26 +25,25 @@ Ruby client to connect to the central kata server.
 
 ### Installing 
 
-#### Install RVM
+#### Install RBENV
 ```bash
-curl -sSL https://get.rvm.io | bash -s stable
-echo "source $HOME/.rvm/scripts/rvm" >> .bash_profile
+brew install rbenv
+
+# Then add this to bash_locations
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 ```
 
 #### Install ruby
 ```bash
-rvm install ruby-2.2.2
-rvm use ruby-2.2.2
+rbenv install 3.2.2
+rbenv local 3.2.2
+ruby --version
 ```
 
 #### Install bundler
 ```bash
 gem install bundler
-```
-
-#### Install coveralls
-```bash
-gem install coveralls
 ```
 
 #### Install cucumber
@@ -79,9 +78,10 @@ All test require the ActiveMQ broker to be started.
 The following commands are available for the broker.
 
 ```
-python ./broker/activemq-wrapper.py start
-python wiremock/wiremock-wrapper.py start 41375
-python wiremock/wiremock-wrapper.py start 8222
+java8
+python3 ./broker/activemq-wrapper.py start
+python3 wiremock/wiremock-wrapper.py start 41375
+python3 wiremock/wiremock-wrapper.py start 8222
 ```
 
 or 
@@ -90,7 +90,10 @@ or
 ./startExternalDependencies.sh
 ``` 
 
-Run tests with `rake features`.
+Run tests with:
+```
+bundle exec rake features
+```
 To run a single scenario execute `cucumber path/to/file.feature:line_no`
 Recommendation is to use the cucumber command instead of rake always outside of CI.
 
@@ -98,9 +101,10 @@ Recommendation is to use the cucumber command instead of rake always outside of 
 
 Stop external dependencies
 ```
-python ./broker/activemq-wrapper.py stop
-python wiremock/wiremock-wrapper.py stop 41375
-python wiremock/wiremock-wrapper.py stop 8222
+java8
+python3 ./broker/activemq-wrapper.py stop
+python3 wiremock/wiremock-wrapper.py stop 41375
+python3 wiremock/wiremock-wrapper.py stop 8222
 ```
 
 or 

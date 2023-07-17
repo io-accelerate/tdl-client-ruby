@@ -1,4 +1,5 @@
-require 'unirest'
+require 'uri'
+require 'net/http'
 require 'tdl/runner/runner_action'
 
 RECORDING_SYSTEM_ENDPOINT = 'http://localhost:41375'
@@ -26,8 +27,8 @@ class RecordingSystem
 
     def is_running
         begin
-            response = Unirest.get "#{RECORDING_SYSTEM_ENDPOINT}/status"
-            if response.code == 200 and response.body.start_with?('OK')
+            response = Net::HTTP.get_response(URI("#{RECORDING_SYSTEM_ENDPOINT}/status"))
+            if response.is_a?(Net::HTTPSuccess) and response.body.start_with?('OK')
                 return true
             end
         rescue StandardError => e
@@ -57,10 +58,10 @@ class RecordingSystem
       end
 
       begin
-        response = Unirest.post "#{RECORDING_SYSTEM_ENDPOINT}#{endpoint}",
-                                parameters: body
+        response = Net::HTTP.post(URI("#{RECORDING_SYSTEM_ENDPOINT}#{endpoint}"),
+                                  body)
 
-        unless response.code == 200
+        unless response.is_a?(Net::HTTPSuccess)
           puts "Recording system returned code: #{response.code}"
           return
         end
