@@ -10,11 +10,5 @@ module TDL
       @method = request_data.fetch('method')
       @params = request_data.fetch('params')
     end
-
-    def audit_text
-      "id = #{id}, req = #{method}(#{params.map{ |param|
-        TDL::Util.compress_data(param)
-      }.join(', ')})"
-    end
   end
 end

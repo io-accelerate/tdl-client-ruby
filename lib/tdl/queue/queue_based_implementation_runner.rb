@@ -54,11 +54,11 @@ module TDL
       
             def process_next_request_from(remote_broker, request)
               @audit.start_line
-              @audit.log(request)
+              @audit.log_request(request)
       
               # Obtain response from user
               response = @processing_rules.get_response_for(request)
-              @audit.log(response)
+              @audit.log_response(response)
 
               # Act
               after_response(remote_broker, request, response)
@@ -98,12 +98,27 @@ class AuditStream
       @str = ''
     end
 
-    def log(auditable)
-      text = auditable.audit_text
+    def log_request(request)
+      text =  "id = #{request.id}, req = #{request.method}(#{request.params.map{ |param|
+        TDL::Util.compress_data(param)
+      }.join(', ')})"
+      
       if not text.empty? and @str.length > 0
         @str << ', '
       end
+      @str << text
+    end
 
+    def log_response(response)
+      if response.instance_variable_defined?(:@result)
+        text = "resp = #{TDL::Util.compress_data(response.result)}"
+      else
+        text = "error = #{response.message}" + ", (NOT PUBLISHED)"
+      end
+      
+      if not text.empty? and @str.length > 0
+        @str << ', '
+      end
       @str << text
     end
 

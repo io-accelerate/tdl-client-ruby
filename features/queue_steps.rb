@@ -106,6 +106,8 @@ USER_IMPLEMENTATIONS = {
     'sum the elements of an array' => ->(x) {x.reduce(0) { |sum, num| sum + num }},
     'generate array of integers' => lambda {|x, y| (x...y).to_a},
     'work for 600ms' => ->(x) {sleep(0.6); 'OK'},
+    'concatenate fields as string' => ->(obj) {obj["field1"] + obj["field2"].to_s},
+    'build an object with two fields' => ->(field1, field2) {{ "field1" => field1, "field2" => field2 }},
 }
 
 def as_implementation(call)

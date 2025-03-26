@@ -16,9 +16,5 @@ module TDL
         :id => @id,
       }
     end
-
-    def audit_text
-      "resp = #{TDL::Util.compress_data(@result)}"
-    end
   end
 end

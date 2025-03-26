@@ -112,23 +112,6 @@ bundle exec rake features
 To run a single scenario execute `cucumber path/to/file.feature:line_no`
 Recommendation is to use the cucumber command instead of rake always outside of CI.
 
-### Cleanup
-
-Stop external dependencies
-```
-java8
-python3 ./broker/activemq-wrapper.py stop
-python3 wiremock/wiremock-wrapper.py stop 41375
-python3 wiremock/wiremock-wrapper.py stop 8222
-```
-
-or 
-
-```bash
-./stopExternalDependencies.sh
-```
-
-
 ## To release
 
 Check the version in:
