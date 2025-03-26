@@ -47,7 +47,7 @@ class WiremockProcess
       method: verb
     }
 
-    if body
+    if body && !body.empty?
       request_json[:bodyPatterns] = [{equalTo: body}]
     end
 
