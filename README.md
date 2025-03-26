@@ -37,8 +37,8 @@ git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-b
 
 #### Install ruby
 ```bash
-rbenv install 3.2.2
-rbenv local 3.2.2
+rbenv install 3.4.2
+rbenv local 3.4.2
 ruby --version
 ```
 

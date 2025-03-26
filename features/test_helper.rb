@@ -10,7 +10,7 @@ require_relative './utils/jmx/broker/testing/active_mq_broker_rule'
 
 require 'minitest/autorun'
 require 'minitest/reporters'
-MiniTest::Reporters.use!
+Minitest::Reporters.use!
 
 require 'logging'
 Logging.logger.root.appenders = Logging.appenders.stdout

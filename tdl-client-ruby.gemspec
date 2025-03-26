@@ -54,10 +54,13 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'logging', '2.3.1'
 
   spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake', '~> 13.0.6'
-  spec.add_development_dependency 'minitest', '~> 5.18.1'
-  spec.add_development_dependency 'minitest-reporters', '~> 1.6.0'
-  spec.add_development_dependency 'json', '~> 2.6.3'
-  spec.add_development_dependency 'cucumber', '~> 8.0.0'
+  spec.add_development_dependency 'rake', '~> 13.2.1'
+  spec.add_development_dependency 'minitest', '~> 5.25.5'
+  spec.add_development_dependency 'minitest-reporters', '~> 1.7.1'
+  spec.add_development_dependency 'json', '~> 2.9.1'
+  spec.add_development_dependency 'cucumber', '~> 9.2.1'
   spec.add_development_dependency 'debase', '~> 0.2.9'
+  spec.add_development_dependency 'ostruct', '~> 0.6.1'
+  spec.add_development_dependency 'logger', '~> 1.6.6'
+  spec.add_development_dependency 'syslog', '~> 0.3.0'
 end
