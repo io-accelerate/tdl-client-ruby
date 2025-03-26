@@ -59,5 +59,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest-reporters', '~> 1.6.0'
   spec.add_development_dependency 'json', '~> 2.6.3'
   spec.add_development_dependency 'cucumber', '~> 8.0.0'
-  spec.add_development_dependency 'debase', '~> 3.0.0.beta.6'
+  spec.add_development_dependency 'debase', '~> 0.2.9'
 end

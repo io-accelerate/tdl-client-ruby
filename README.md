@@ -26,12 +26,13 @@ Ruby client to connect to the central kata server.
 ### Installing 
 
 #### Install RBENV
-```bash
-brew install rbenv
 
-# Then add this to bash_locations
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+```bash
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+
+# Then activate
+~/.rbenv/bin/rbenv init
 ```
 
 #### Install ruby
@@ -39,6 +40,15 @@ eval "$(rbenv init -)"
 rbenv install 3.2.2
 rbenv local 3.2.2
 ruby --version
+```
+
+If the above fails, you might need to install libyaml:
+```shell
+https://pyyaml.org/download/libyaml/
+
+./configure
+make
+make install
 ```
 
 #### Install bundler
@@ -56,39 +66,44 @@ gem install cucumber
 bundle install
 ```
 
-#### Manual 
 
-Stopping the wiremocks and broker services would be the same, using the `stop` command instead of the `start` command.
+# Testing
 
-#### Automatic (via script)
+All test require the ActiveMQ broker and Wiremock to be started.
 
-Start and stop the wiremocks and broker services with the below:
- 
-```bash
-./startExternalDependencies.sh
-``` 
-
-```bash
-./stopExternalDependencies.sh
-``` 
-
-### Testing
-
-All test require the ActiveMQ broker to be started.
-The following commands are available for the broker.
-
-```
-java8
-python3 ./broker/activemq-wrapper.py start
-python3 wiremock/wiremock-wrapper.py start 41375
-python3 wiremock/wiremock-wrapper.py start 8222
+Start ActiveMQ
+```shell
+export ACTIVEMQ_CONTAINER=apache/activemq-classic:6.1.0
+docker run -d -it --rm -p 28161:8161 -p 21613:61613 -p 21616:61616 --name activemq ${ACTIVEMQ_CONTAINER}
 ```
 
-or 
+The ActiveMQ web UI can be accessed at:
+http://localhost:28161/admin/
+use admin/admin to login
 
-```bash
-./startExternalDependencies.sh
-``` 
+Start two Wiremock servers
+```shell
+export WIREMOCK_CONTAINER=wiremock/wiremock:3.7.0
+docker run -d -it --rm -p 8222:8080 --name challenge-server ${WIREMOCK_CONTAINER}
+docker run -d -it --rm -p 41375:8080 --name recording-server ${WIREMOCK_CONTAINER}
+```
+
+The Wiremock admin UI can be found at:
+http://localhost:8222/__admin/
+and docs at
+http://localhost:8222/__admin/docs
+
+
+# Cleanup
+
+Stop dependencies
+```
+docker stop activemq
+docker stop recording-server
+docker stop challenge-server
+```
+
+# Tests
 
 Run tests with:
 ```

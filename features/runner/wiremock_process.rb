@@ -28,7 +28,7 @@ class WiremockProcess
         }
       }
     end
-    Net::HTTP.post(URI("#{@base_url}/__admin/mappings/new"),
+    Net::HTTP.post(URI("#{@base_url}/__admin/mappings"),
                    request_json.to_json,
                    { "Accept" => "application/json"})
   end

@@ -11,7 +11,7 @@ CORRECT_SOLUTION = lambda {|params|
 # Jolokia JMX definition
 HOSTNAME = 'localhost'
 JMX_PORT = 28161
-BROKER_NAME = 'TEST.BROKER'
+BROKER_NAME = 'LOCALHOST'
 
 BROKER = ActiveMQBrokerRule.new(HOSTNAME, JMX_PORT, BROKER_NAME)
 BROKER.connect

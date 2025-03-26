@@ -11,11 +11,17 @@ class JolokiaSession
   def self.connect(host, admin_port)
     jolokia_url = "http://#{host}:#{admin_port}/api/jolokia"
     endpoint = '/version'
-    jolokia_version = JSON.parse(Net::HTTP.get(URI(jolokia_url + endpoint)))['value']['agent']
 
-    expected_jolokia_version = '1.2.2'
-    if jolokia_version != expected_jolokia_version
-      raise "Failed to retrieve the right Jolokia version. Expected: #{expected_jolokia_version} got #{jolokia_version}"
+    uri = URI(jolokia_url + endpoint)
+    request = Net::HTTP::Get.new(uri)
+    request['Origin'] = "http://localhost"
+
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(request)
+    end
+    
+    unless response.code.to_i == 200
+      raise "Failed to connect to Jolokia. HTTP status: #{response.code}"
     end
 
     JolokiaSession.new(URI(jolokia_url))
