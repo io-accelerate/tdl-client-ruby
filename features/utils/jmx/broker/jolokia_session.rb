@@ -32,7 +32,10 @@ class JolokiaSession
     json_payload = jolokia_payload.to_json
     # puts "Payload: #{json_payload}"
 
-    http_request = Net::HTTP::Post.new(@uri, initheader = {'Content-Type' => 'application/json'})
+    http_request = Net::HTTP::Post.new(@uri, initheader = {
+      'Content-Type' => 'application/json',
+      'Origin' => "http://localhost"
+    })
     http_request.body = json_payload
     http_response = Net::HTTP.new(@uri.hostname, @uri.port).start { |http| http.request(http_request) }
     if http_response.code != '200'
