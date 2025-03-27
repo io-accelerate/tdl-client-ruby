@@ -30,7 +30,7 @@ jobs:
 
       # ~~~~~~~~~~~~~ Build gem ~~~~~~~~~~~~~
       - name: Build gem
-        run: gem build your_gem.gemspec
+        run: gem build tdl-client-ruby.gemspec
 
       # ~~~~~~~~~~~~~ Publish to RubyGems ~~~~~~~~~~~~~
       - name: Push to RubyGems
