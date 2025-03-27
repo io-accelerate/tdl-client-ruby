@@ -1,0 +1,39 @@
+name: Publish to RubyGems
+
+on:
+  push:
+    tags:
+      - v*
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ~~~~~~~~~~~~~ Ruby setup ~~~~~~~~~~~~~
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Display Ruby version
+        run: ruby -v
+
+      - name: Install dependencies
+        run: bundle install
+
+      # ~~~~~~~~~~~~~ Build gem ~~~~~~~~~~~~~
+      - name: Build gem
+        run: gem build your_gem.gemspec
+
+      # ~~~~~~~~~~~~~ Publish to RubyGems ~~~~~~~~~~~~~
+      - name: Push to RubyGems
+        run: gem push *.gem
+        env:
+          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
