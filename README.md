@@ -112,24 +112,28 @@ bundle exec rake features
 To run a single scenario execute `cucumber path/to/file.feature:line_no`
 Recommendation is to use the cucumber command instead of rake always outside of CI.
 
-## To release
-
-Check the version in:
+# To release
+Set version manually in `tdl-client-ruby.gemspec`:
 ```
-lib/tdl/previous_version.rb
-```
-
-Build Gem
-```
-bundle exec rake build
+VERSION = "0.29.1"
 ```
 
-Push to Rubygems
+Commit the changes
 ```
-bundle exec rake release
+export RELEASE_TAG="v$(cat tdl-client-ruby.gemspec | grep "VERSION =" | cut -d "\"" -f2)"
+echo ${RELEASE_TAG}
+
+git add --all
+git commit -m "Releasing version ${RELEASE_TAG}"
+
+git tag -a "${RELEASE_TAG}" -m "${RELEASE_TAG}"
+git push --tags
+git push
 ```
 
-Manually update the version in:
-```
-lib/tdl/previous_version.rb
-```
+Wait for the Github build to finish, then go to:
+https://pypi.org/
+
+## To manually build the PyPi files
+
+TODO
