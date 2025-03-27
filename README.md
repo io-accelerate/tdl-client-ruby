@@ -132,7 +132,7 @@ git push
 ```
 
 Wait for the Github build to finish, then go to:
-https://pypi.org/
+https://rubygems.org/gems/tdl-client-ruby
 
 ## To manually build the RubyGems files
 

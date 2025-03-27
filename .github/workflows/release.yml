@@ -31,7 +31,7 @@ jobs:
 
       # ~~~~~~~~~~~~~ Build the gem ~~~~~~~~~~~~~
       - name: Build gem
-        run: gem build your_gem.gemspec
+        run: gem build tdl-client-ruby.gemspec
 
       - name: Rename gem for consistency
         run: |
