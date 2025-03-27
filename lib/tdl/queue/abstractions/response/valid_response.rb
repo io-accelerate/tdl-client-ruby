@@ -1,5 +1,3 @@
-require 'tdl/util'
-
 module TDL
   class ValidResponse
     attr_reader :id, :result

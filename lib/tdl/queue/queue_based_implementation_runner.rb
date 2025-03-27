@@ -1,4 +1,5 @@
 require 'logging'
+require 'tdl/audit/presentation_utils'
 require 'tdl/queue/processing_rules'
 require 'tdl/queue/transport/remote_broker'
 
@@ -99,9 +100,8 @@ class AuditStream
     end
 
     def log_request(request)
-      text =  "id = #{request.id}, req = #{request.method}(#{request.params.map{ |param|
-        TDL::Util.compress_data(param)
-      }.join(', ')})"
+      params_as_string = TDL::PresentationUtil.to_displayable_request(request.params)
+      text =  "id = #{request.id}, req = #{request.method}(#{params_as_string})"
       
       if not text.empty? and @str.length > 0
         @str << ', '
@@ -111,7 +111,8 @@ class AuditStream
 
     def log_response(response)
       if response.instance_variable_defined?(:@result)
-        text = "resp = #{TDL::Util.compress_data(response.result)}"
+        representation = TDL::PresentationUtil.to_displayable_response(response.result)
+        text = "resp = #{representation}"
       else
         text = "error = #{response.message}" + ", (NOT PUBLISHED)"
       end

@@ -1,5 +1,3 @@
-require 'tdl/util'
-
 module TDL
   class Request
     attr_reader :original_message, :id, :method, :params
