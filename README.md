@@ -134,6 +134,14 @@ git push
 Wait for the Github build to finish, then go to:
 https://pypi.org/
 
-## To manually build the PyPi files
+## To manually build the RubyGems files
 
-TODO
+Build the gem:
+```shell
+bundle exec rake build
+```
+
+Deploy the gem to RubyGems:
+```shell
+bundle exec rake release
+```

@@ -3,7 +3,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 #
-VERSION = "0.29.3"
+VERSION = "0.29.4"
 
 
 #~~~~~ Create gemspec
