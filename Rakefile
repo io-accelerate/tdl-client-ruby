@@ -33,8 +33,6 @@ end
 
 #~~~~~~~~ Deploy
 
-require 'tdl/previous_version'
-
 task :build do
   system 'gem build tdl-client-ruby.gemspec'
 end
