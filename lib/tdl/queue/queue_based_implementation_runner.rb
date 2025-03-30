@@ -63,8 +63,7 @@ module TDL
               @audit.log_request(request)
       
               # Obtain response from user
-              request_as_object = ApplyProcessingRules.request_as_object(request)
-              response = @processing_rules.get_response_for(request_as_object)
+              response = @processing_rules.get_response_for(request)
               @audit.log_response(response)
 
               # Act
@@ -89,24 +88,6 @@ module TDL
                 else
                    # Do nothing
                 end
-            end
-            
-            def self.request_as_object(request)
-              Request.new(request.original_message, 
-                          request.id, 
-                          request.method, 
-                          ApplyProcessingRules.to_openstruct(request.params))
-            end
-
-            def self.to_openstruct(obj)
-              case obj
-              when Hash
-                OpenStruct.new(obj.transform_values { |v| to_openstruct(v) })
-              when Array
-                obj.map { |e| to_openstruct(e) }
-              else
-                obj
-              end
             end
         end
     end
