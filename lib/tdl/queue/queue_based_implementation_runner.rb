@@ -1,7 +1,11 @@
 require 'logging'
+require 'ostruct'
+
 require 'tdl/audit/presentation_utils'
 require 'tdl/queue/processing_rules'
 require 'tdl/queue/transport/remote_broker'
+require 'tdl/audit/audit_stream'
+
 
 module TDL
     class QueueBasedImplementationRunner
@@ -52,13 +56,15 @@ module TDL
               @logger = Logging.logger[self]
               @audit = AuditStream.new
             end
-      
+
+
             def process_next_request_from(remote_broker, request)
               @audit.start_line
               @audit.log_request(request)
       
               # Obtain response from user
-              response = @processing_rules.get_response_for(request)
+              request_as_object = ApplyProcessingRules.request_as_object(request)
+              response = @processing_rules.get_response_for(request_as_object)
               @audit.log_response(response)
 
               # Act
@@ -84,47 +90,26 @@ module TDL
                    # Do nothing
                 end
             end
+            
+            def self.request_as_object(request)
+              Request.new(request.original_message, 
+                          request.id, 
+                          request.method, 
+                          ApplyProcessingRules.to_openstruct(request.params))
+            end
+
+            def self.to_openstruct(obj)
+              case obj
+              when Hash
+                OpenStruct.new(obj.transform_values { |v| to_openstruct(v) })
+              when Array
+                obj.map { |e| to_openstruct(e) }
+              else
+                obj
+              end
+            end
         end
     end
 end
 
-class AuditStream
 
-    def initialize
-      @logger = Logging.logger[self]
-      start_line
-    end
-
-    def start_line
-      @str = ''
-    end
-
-    def log_request(request)
-      params_as_string = TDL::PresentationUtil.to_displayable_request(request.params)
-      text =  "id = #{request.id}, req = #{request.method}(#{params_as_string})"
-      
-      if not text.empty? and @str.length > 0
-        @str << ', '
-      end
-      @str << text
-    end
-
-    def log_response(response)
-      if response.instance_variable_defined?(:@result)
-        representation = TDL::PresentationUtil.to_displayable_response(response.result)
-        text = "resp = #{representation}"
-      else
-        text = "error = #{response.message}" + ", (NOT PUBLISHED)"
-      end
-      
-      if not text.empty? and @str.length > 0
-        @str << ', '
-      end
-      @str << text
-    end
-
-    def end_line
-      @logger.info @str
-    end
-
-end
