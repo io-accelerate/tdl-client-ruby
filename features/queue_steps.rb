@@ -105,6 +105,12 @@ class TestItem
   end
 end
 
+def object_to_hash(obj)
+  obj.instance_variables.each_with_object({}) do |var, hash|
+    hash[var.to_s.delete("@")] = obj.instance_variable_get(var)
+  end
+end
+
 USER_IMPLEMENTATIONS = {
     'add two numbers' => lambda {|x, y| x + y},
     'return null' => lambda {|*args| nil},
@@ -119,7 +125,7 @@ USER_IMPLEMENTATIONS = {
       item = TestItem.new(**obj.transform_keys(&:to_sym)) 
       item.field1 + item.field2.to_s
     },
-    'build an object with two fields' => ->(field1, field2) {{ "field1" => field1, "field2" => field2 }},
+    'build an object with two fields' => ->(field1, field2) {object_to_hash(TestItem.new(field1: field1, field2: field2))},
 }
 
 def as_implementation(call)
