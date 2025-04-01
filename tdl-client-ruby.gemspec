@@ -34,6 +34,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'cucumber', '~> 9.2.1'
   spec.add_development_dependency 'debase', '~> 0.2.9'
   spec.add_development_dependency 'ostruct', '~> 0.6.1'
-  spec.add_development_dependency 'logger', '~> 1.6.6'
+  spec.add_development_dependency 'logger', '~> 1.7.0'
   spec.add_development_dependency 'syslog', '~> 0.3.0'
 end
