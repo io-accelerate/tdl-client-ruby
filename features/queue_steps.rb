@@ -126,6 +126,7 @@ USER_IMPLEMENTATIONS = {
       item.field1 + item.field2.to_s
     },
     'build an object with two fields' => ->(field1, field2) {object_to_hash(TestItem.new(field1: field1, field2: field2))},
+    'retrieve a value from a map' => ->(field_as_map) {field_as_map["key1"]},
 }
 
 def as_implementation(call)
