@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'logging', '2.4.0'
 
   spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake', '~> 13.2.1'
+  spec.add_development_dependency 'rake', '~> 13.3.0'
   spec.add_development_dependency 'minitest', '~> 5.25.5'
   spec.add_development_dependency 'minitest-reporters', '~> 1.7.1'
   spec.add_development_dependency 'json', '~> 2.11.3'
