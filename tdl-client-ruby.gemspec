@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest', '~> 5.25.5'
   spec.add_development_dependency 'minitest-reporters', '~> 1.7.1'
   spec.add_development_dependency 'json', '~> 2.13.2'
-  spec.add_development_dependency 'cucumber', '~> 10.0.0'
+  spec.add_development_dependency 'cucumber', '~> 10.1.0'
   spec.add_development_dependency 'debase', '~> 0.2.9'
   spec.add_development_dependency 'ostruct', '~> 0.6.1'
   spec.add_development_dependency 'logger', '~> 1.7.0'
