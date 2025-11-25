@@ -6,7 +6,7 @@ module TDL
         
         def initialize
             @port = 61613
-            @time_to_wait_for_requests = 500
+            @time_to_wait_for_requests = 1500
             @audit_stream = ConsoleAuditStream.new
             @request_queue_name = ''
             @response_queue_name = ''
