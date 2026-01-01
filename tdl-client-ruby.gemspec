@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 13.3.0'
   spec.add_development_dependency 'minitest', '~> 5.26.0'
   spec.add_development_dependency 'minitest-reporters', '~> 1.7.1'
-  spec.add_development_dependency 'json', '~> 2.15.0'
+  spec.add_development_dependency 'json', '~> 2.18.0'
   spec.add_development_dependency 'cucumber', '~> 10.1.0'
   spec.add_development_dependency 'debase', '~> 0.2.9'
   spec.add_development_dependency 'ostruct', '~> 0.6.1'
