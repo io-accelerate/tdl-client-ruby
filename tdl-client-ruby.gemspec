@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake', '~> 13.3.0'
-  spec.add_development_dependency 'minitest', '~> 5.26.0'
+  spec.add_development_dependency 'minitest', '~> 6.0.1'
   spec.add_development_dependency 'minitest-reporters', '~> 1.7.1'
   spec.add_development_dependency 'json', '~> 2.15.0'
   spec.add_development_dependency 'cucumber', '~> 10.1.0'
